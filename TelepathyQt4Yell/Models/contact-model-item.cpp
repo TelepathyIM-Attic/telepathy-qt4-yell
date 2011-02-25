@@ -76,11 +76,6 @@ CallContactCapabilities::CallContactCapabilities(
     : rccSpecs(pRccSpecs),
       specificToContact(pSpecificToContact)
 {
-    qDebug("CallContactCapabilities::CallContactCapabilities");
-    foreach (const Tp::RequestableChannelClassSpec &rccSpec, rccSpecs) {
-        qDebug() << "    fixedProps=" << rccSpec.fixedProperties();
-        qDebug() << "    allowedProps=" << rccSpec.allowedProperties();
-    }
 }
 
 Tp::RequestableChannelClassSpec CallRequestableChannelClassSpec::call()
@@ -257,10 +252,7 @@ bool CallContactCapabilities::calls() const
 
 bool CallContactCapabilities::audioCalls() const
 {
-    qDebug() << "CallContactCapabilities::audioCalls";
     foreach (const Tp::RequestableChannelClassSpec &rccSpec, rccSpecs) {
-        qDebug() << "    fixedProps=" << rccSpec.fixedProperties();
-        qDebug() << "    allowedProps=" << rccSpec.allowedProperties();
         if (rccSpec.supports(CallRequestableChannelClassSpec::audioCallAllowed()) ||
             rccSpec.supports(CallRequestableChannelClassSpec::audioCallFixed()) ) {
             return true;
@@ -271,10 +263,7 @@ bool CallContactCapabilities::audioCalls() const
 
 bool CallContactCapabilities::videoCalls() const
 {
-    qDebug() << "CallContactCapabilities::videoCalls";
     foreach (const Tp::RequestableChannelClassSpec &rccSpec, rccSpecs) {
-        qDebug() << "    fixedProps=" << rccSpec.fixedProperties();
-        qDebug() << "    allowedProps=" << rccSpec.allowedProperties();
         if (rccSpec.supports(CallRequestableChannelClassSpec::videoCallAllowed()) ||
             rccSpec.supports(CallRequestableChannelClassSpec::videoCallFixed())) {
             return true;
@@ -285,10 +274,7 @@ bool CallContactCapabilities::videoCalls() const
 
 bool CallContactCapabilities::videoCallsWithAudio() const
 {
-    qDebug() << "CallContactCapabilities::videoCallsWithAudio";
     foreach (const Tp::RequestableChannelClassSpec &rccSpec, rccSpecs) {
-        qDebug() << "    fixedProps=" << rccSpec.fixedProperties();
-        qDebug() << "    allowedProps=" << rccSpec.allowedProperties();
         if (rccSpec.supports(CallRequestableChannelClassSpec::videoCallAllowedWithAudioAllowed()) ||
             rccSpec.supports(CallRequestableChannelClassSpec::videoCallAllowedWithAudioFixed()) ||
             rccSpec.supports(CallRequestableChannelClassSpec::videoCallFixedWithAudioAllowed()) ||
