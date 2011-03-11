@@ -55,6 +55,8 @@ public:
     Q_INVOKABLE void setRequestedPresence(int type, const QString &status, const QString &statusMessage);
 
     void clearContacts();
+
+public Q_SLOTS:
     void addKnownContacts();
 
 Q_SIGNALS:
