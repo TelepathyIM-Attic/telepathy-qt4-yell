@@ -308,7 +308,6 @@ struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT ContactModelItem::Private
           mCallContactCaps(contact->capabilities().allClassSpecs(),
               contact->capabilities().isSpecificToContact())
     {
-        qDebug() << __FILE__ << ":" << __LINE__;
     }
 
     Tp::ContactPtr mContact;
