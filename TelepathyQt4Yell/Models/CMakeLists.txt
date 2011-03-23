@@ -44,7 +44,8 @@ set(telepathy_qt4_yell_models_HEADERS
     avatar-image-provider.h
     contact-model-item.h
     conversation-item.h
-    conversation-model.h
+    abstract-conversation-model.h
+    session-conversation-model.h
     flat-model-proxy.h
     global.h
     tree-node.h
