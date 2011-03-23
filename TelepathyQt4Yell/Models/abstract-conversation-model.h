@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _TelepathyQt4Yell_Models_conversation_model_h_HEADER_GUARD_
-#define _TelepathyQt4Yell_Models_conversation_model_h_HEADER_GUARD_
+#ifndef _TelepathyQt4Yell_Models_abstract_conversation_model_h_HEADER_GUARD_
+#define _TelepathyQt4Yell_Models_abstract_conversation_model_h_HEADER_GUARD_
 
 #ifndef IN_TELEPATHY_QT4_YELL_MODELS_HEADER
 #error IN_TELEPATHY_QT4_YELL_MODELS_HEADER
@@ -37,10 +37,10 @@ namespace Tpy
 
 class ConversationItem;
 
-class TELEPATHY_QT4_YELL_MODELS_EXPORT ConversationModel : public QAbstractListModel
+class TELEPATHY_QT4_YELL_MODELS_EXPORT AbstractConversationModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_DISABLE_COPY(ConversationModel)
+    Q_DISABLE_COPY(AbstractConversationModel)
 
 public:
     enum Role {
@@ -52,16 +52,11 @@ public:
         ItemRole
     };
 
-    explicit ConversationModel(const Tp::ContactPtr &self, const Tp::TextChannelPtr &channel, QObject *parent = 0);
-    virtual ~ConversationModel();
+    explicit AbstractConversationModel(QObject *parent = 0);
+    virtual ~AbstractConversationModel();
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
-    Q_INVOKABLE void sendMessage(const QString &text);
-    Q_INVOKABLE void disconnectChannelQueue();
-    Q_INVOKABLE void connectChannelQueue();
-
-
     Tp::ContactPtr selfContact() const;
 
 protected:
@@ -69,16 +64,10 @@ protected:
     typedef Tp::ChannelChatState ChannelChatState;
 
     void addItem(const ConversationItem *item);
+    void insertItems(QList<const ConversationItem *> items, int index = 0);
     bool deleteItem(const ConversationItem *item);
 
     QModelIndex index(const ConversationItem *item) const;
-
-protected Q_SLOTS:
-    virtual void onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state);
-
-private Q_SLOTS:
-    void onChannelReady(Tp::PendingOperation *op);
-    void onMessageReceived(const Tp::ReceivedMessage &message);
 
 private:
     struct Private;
@@ -88,4 +77,4 @@ private:
 
 }
 
-#endif // _TelepathyQt4Yell_Models_conversation_model_h_HEADER_GUARD_
+#endif // _TelepathyQt4Yell_Models_abstract_conversation_model_h_HEADER_GUARD_

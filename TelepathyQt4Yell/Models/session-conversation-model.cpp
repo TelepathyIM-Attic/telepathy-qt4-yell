@@ -18,9 +18,9 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#include <TelepathyQt4Yell/Models/ConversationModel>
+#include <TelepathyQt4Yell/Models/SessionConversationModel>
 
-#include "TelepathyQt4Yell/Models/_gen/conversation-model.moc.hpp"
+#include "TelepathyQt4Yell/Models/_gen/session-conversation-model.moc.hpp"
 
 #include <TelepathyQt4Yell/Models/ConversationItem>
 
@@ -34,7 +34,7 @@
 namespace Tpy
 {
 
-struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT ConversationModel::Private
+struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT SessionConversationModel::Private
 {
     Private(const Tp::ContactPtr &self, const Tp::TextChannelPtr &channel)
         : mSelf(self),
@@ -44,81 +44,23 @@ struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT ConversationModel::Private
 
     Tp::ContactPtr mSelf;
     Tp::TextChannelPtr mChannel;
-    QList<const ConversationItem *> mItems;
 };
 
-ConversationModel::ConversationModel(const Tp::ContactPtr &self, const Tp::TextChannelPtr &channel, QObject *parent)
-    : QAbstractListModel(parent),
+SessionConversationModel::SessionConversationModel(const Tp::ContactPtr &self, const Tp::TextChannelPtr &channel, QObject *parent)
+    : AbstractConversationModel(parent),
       mPriv(new Private(self,channel))
 {
     connect(mPriv->mChannel.data(),
             SIGNAL(chatStateChanged(Tp::ContactPtr,Tp::ChannelChatState)),
             SLOT(onChatStateChanged(Tp::ContactPtr,Tp::ChannelChatState)));
-
-    QHash<int, QByteArray> roles;
-    roles[TextRole] = "text";
-    roles[ContactRole] = "contact";
-    roles[ContactAvatarRole] = "contactAvatar";
-    roles[TimeRole] = "time";
-    roles[TypeRole] = "type";
-    roles[ItemRole] = "item";
-    setRoleNames(roles);
 }
 
-ConversationModel::~ConversationModel()
+SessionConversationModel::~SessionConversationModel()
 {
-    qDeleteAll(mPriv->mItems);
-    mPriv->mItems.clear();
     delete mPriv;
 }
 
-QVariant ConversationModel::data(const QModelIndex &index, int role) const
-{
-    if (!index.isValid()) {
-        return QVariant();
-    }
-
-    if (index.row() >= mPriv->mItems.count()) {
-        return QVariant();
-    }
-
-    const ConversationItem *item = mPriv->mItems[index.row()];
-    switch (role) {
-    case TextRole:
-        return item->text();
-    case ContactRole:
-        return item->contact()->alias();
-    case ContactAvatarRole:
-        return item->contact()->avatarData().fileName;
-    case TimeRole:
-        return item->time();
-    case TypeRole:
-        switch (item->type()) {
-        case ConversationItem::INCOMING_MESSAGE:
-            return QString::fromLatin1("incoming_message");
-        case ConversationItem::OUTGOING_MESSAGE:
-            return QString::fromLatin1("outgoing_message");
-        case ConversationItem::EVENT:
-            return QString::fromLatin1("event");
-        default:
-            return QString();
-        }
-    case ItemRole:
-        return QVariant::fromValue(
-                        const_cast<QObject *>(
-                        static_cast<const QObject *>(item)));
-    default:
-        return QVariant();
-    }
-
-}
-
-int ConversationModel::rowCount(const QModelIndex &parent) const
-{
-    return mPriv->mItems.count();
-}
-
-void ConversationModel::sendMessage(const QString &text)
+void SessionConversationModel::sendMessage(const QString &text)
 {
     ConversationItem *item = new ConversationItem(mPriv->mSelf, QDateTime::currentDateTime(),
                                                   text, ConversationItem::OUTGOING_MESSAGE, this);
@@ -127,46 +69,12 @@ void ConversationModel::sendMessage(const QString &text)
     mPriv->mChannel->send(item->text());
 }
 
-Tp::ContactPtr ConversationModel::selfContact() const
+Tp::ContactPtr SessionConversationModel::selfContact() const
 {
     return mPriv->mSelf;
 }
 
-void ConversationModel::addItem(const ConversationItem *item)
-{
-    beginInsertRows(QModelIndex(), mPriv->mItems.count(), mPriv->mItems.count());
-    mPriv->mItems.append(item);
-    endInsertRows();
-}
-
-bool ConversationModel::deleteItem(const ConversationItem *item)
-{
-    int num = mPriv->mItems.indexOf(item);
-    if (num != -1) {
-        beginRemoveRows(QModelIndex(), num, num);
-        mPriv->mItems.removeAt(num);
-        endRemoveRows();
-        return true;
-    }
-
-    return false;
-}
-
-QModelIndex ConversationModel::index(const ConversationItem *item) const
-{
-    int num = mPriv->mItems.indexOf(item);
-    if (num != -1) {
-        return QAbstractListModel::index(num);
-    }
-
-    return QModelIndex();
-}
-
-void ConversationModel::onChannelReady(Tp::PendingOperation *op)
-{
-}
-
-void ConversationModel::onMessageReceived(const Tp::ReceivedMessage &message)
+void SessionConversationModel::onMessageReceived(const Tp::ReceivedMessage &message)
 {
     // TODO: For the moment skip if the message is a delivery report
     // Later they could be used to report status on sent messages
@@ -178,7 +86,7 @@ void ConversationModel::onMessageReceived(const Tp::ReceivedMessage &message)
     mPriv->mChannel->acknowledge(QList<Tp::ReceivedMessage>() << message);
 }
 
-void ConversationModel::onChatStateChanged(const Tp::ContactPtr &contact, ChannelChatState state)
+void SessionConversationModel::onChatStateChanged(const Tp::ContactPtr &contact, ChannelChatState state)
 {
     // ignore events originating from self
     if (contact == mPriv->mSelf) {
@@ -197,7 +105,7 @@ void ConversationModel::onChatStateChanged(const Tp::ContactPtr &contact, Channe
   * Disconnect the model from the channel messages queue so that messages on the queue will not
   * be acknowledged and entered into the model automatically
   */
-void ConversationModel::disconnectChannelQueue()
+void SessionConversationModel::disconnectChannelQueue()
 {
     disconnect(mPriv->mChannel.data(), SIGNAL(messageReceived(Tp::ReceivedMessage)),
                this, SLOT(onMessageReceived(Tp::ReceivedMessage)));
@@ -206,7 +114,7 @@ void ConversationModel::disconnectChannelQueue()
 /**
   * Reconnect the model to the channel queue and acknowledge messages on the queue
   */
-void ConversationModel::connectChannelQueue()
+void SessionConversationModel::connectChannelQueue()
 {
     // reconnect the signal
     connect(mPriv->mChannel.data(),

@@ -10,7 +10,8 @@ set(telepathy_qt4_yell_models_SRCS
     avatar-image-provider.cpp
     contact-model-item.cpp
     conversation-item.cpp
-    conversation-model.cpp
+    abstract-conversation-model.cpp
+    session-conversation-model.cpp
     flat-model-proxy.cpp
     tree-node.cpp
 )
@@ -21,7 +22,8 @@ set(telepathy_qt4_yell_models_MOC_SRCS
     avatar-image-provider.h
     contact-model-item.h
     conversation-item.h
-    conversation-model.h
+    abstract-conversation-model.h
+    session-conversation-model.h
     flat-model-proxy.h
     tree-node.h
 )
@@ -32,7 +34,8 @@ set(telepathy_qt4_yell_models_HEADERS
     AvatarImageProvider
     ContactModelItem
     ConversationItem
-    ConversationModel
+    AbstractConversationModel
+    SessionConversationModel
     FlatModelProxy
     Global
     TreeNode
