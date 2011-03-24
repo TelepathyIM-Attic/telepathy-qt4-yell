@@ -57,7 +57,6 @@ public:
 
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
-    Tp::ContactPtr selfContact() const;
 
 protected:
     // work around moc namespace limitations
