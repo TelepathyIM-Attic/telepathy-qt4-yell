@@ -46,7 +46,7 @@ public:
     bool upgradingCalls() const;
 
 protected:
-    friend class Tpy::ContactModelItem;
+    friend class ContactModelItem;
 
     ContactCapabilities(bool specificToContact);
     ContactCapabilities(const Tp::RequestableChannelClassList &rccs,
