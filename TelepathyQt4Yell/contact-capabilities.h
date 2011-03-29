@@ -48,10 +48,10 @@ public:
 protected:
     friend class Tpy::ContactModelItem;
 
-    TELEPATHY_QT4_YELL_NO_EXPORT ContactCapabilities(bool specificToContact);
-    TELEPATHY_QT4_YELL_NO_EXPORT ContactCapabilities(const Tp::RequestableChannelClassList &rccs,
+    ContactCapabilities(bool specificToContact);
+    ContactCapabilities(const Tp::RequestableChannelClassList &rccs,
             bool specificToContact);
-    TELEPATHY_QT4_YELL_NO_EXPORT ContactCapabilities(const Tp::RequestableChannelClassSpecList &rccSpecs,
+    ContactCapabilities(const Tp::RequestableChannelClassSpecList &rccSpecs,
             bool specificToContact);
 };
 
