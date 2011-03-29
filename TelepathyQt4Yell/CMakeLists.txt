@@ -27,6 +27,7 @@ set(telepathy_qt4_yell_HEADERS
     ChannelClassSpec
     ChannelFactory
     Constants
+    ContactCapabilities
     Global
     PendingCallContent
     RequestableChannelClassSpec
@@ -36,6 +37,7 @@ set(telepathy_qt4_yell_HEADERS
     channel-class-spec.h
     channel-factory.h
     constants.h
+    contact-capabilities.h
     global.h
     requestable-channel-class-spec.h
     types.h)
