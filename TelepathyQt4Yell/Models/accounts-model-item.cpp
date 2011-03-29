@@ -283,7 +283,9 @@ void AccountsModelItem::onContactsChanged(const Tp::Contacts &addedContacts,
             newNodes.append(new ContactModelItem(contact));
         }
     }
-    emit childrenAdded(this, newNodes);
+    if (newNodes.count()) {
+        emit childrenAdded(this, newNodes);
+    }
 }
 
 void AccountsModelItem::onStatusChanged(Tp::ConnectionStatus status)
