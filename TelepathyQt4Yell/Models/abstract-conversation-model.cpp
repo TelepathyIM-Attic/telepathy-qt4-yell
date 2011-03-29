@@ -146,7 +146,7 @@ void AbstractConversationModel::insertItems(QList<const ConversationItem *> item
     const Tpy::ConversationItem *item;
     int i = 0;
     foreach(item, items) {
-        mPriv->mItems.insert(index + i, item);
+        mPriv->mItems.insert(index + i++, item);
     }
     endInsertRows();
 }
