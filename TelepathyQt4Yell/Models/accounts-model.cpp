@@ -114,7 +114,7 @@ AccountsModel::AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent)
     roles[StreamedMediaVideoCallCapabilityRole] = "streamedMediaVideoCall";
     roles[StreamedMediaVideoCallWithAudioCapabilityRole] = "streamedMediaVideoCallWithAudio";
     roles[StreamedMediaUpgradeCallCapabilityRole] = "streamedMediaUpgradeCall";
-    roles[CallCapabilityRole] = "call";
+    roles[MediaCallCapabilityRole] = "mediaCall";
     roles[AudioCallCapabilityRole] = "audioCall";
     roles[VideoCallCapabilityRole] = "videoCall";
     roles[VideoCallWithAudioCapabilityRole] = "videoCallWithAudio";

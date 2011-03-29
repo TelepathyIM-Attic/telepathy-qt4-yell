@@ -88,7 +88,7 @@ public:
         StreamedMediaVideoCallCapabilityRole,
         StreamedMediaVideoCallWithAudioCapabilityRole,
         StreamedMediaUpgradeCallCapabilityRole,
-        CallCapabilityRole,
+        MediaCallCapabilityRole,
         AudioCallCapabilityRole,
         VideoCallCapabilityRole,
         VideoCallWithAudioCapabilityRole,
