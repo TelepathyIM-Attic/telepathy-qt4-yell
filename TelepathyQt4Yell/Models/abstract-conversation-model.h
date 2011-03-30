@@ -58,15 +58,15 @@ public:
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
 
-protected:
-    // work around moc namespace limitations
-    typedef Tp::ChannelChatState ChannelChatState;
-
     void addItem(const ConversationItem *item);
     void insertItems(QList<const ConversationItem *> items, int index = 0);
     bool deleteItem(const ConversationItem *item);
 
     QModelIndex index(const ConversationItem *item) const;
+
+protected:
+    // work around moc namespace limitations
+    typedef Tp::ChannelChatState ChannelChatState;
 
 private:
     struct Private;
