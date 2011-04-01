@@ -1,5 +1,5 @@
 /**
- * This file is part of TelepathyQt4
+ * This file is part of TelepathyQt4Yell
  *
  * @copyright Copyright (C) 2011 Collabora Ltd. <http://www.collabora.co.uk/>
  * @license LGPL 2.1
