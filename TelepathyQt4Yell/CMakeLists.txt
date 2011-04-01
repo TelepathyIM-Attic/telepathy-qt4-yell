@@ -14,6 +14,8 @@ set(telepathy_qt4_yell_SRCS
     channel.cpp
     channel-class-spec.cpp
     channel-factory.cpp
+    contact-capabilities.cpp
+    requestable-channel-class-spec.cpp
     types.cpp)
 
 # Exported headers for Tp-Qt4
@@ -25,15 +27,19 @@ set(telepathy_qt4_yell_HEADERS
     ChannelClassSpec
     ChannelFactory
     Constants
+    ContactCapabilities
     Global
     PendingCallContent
+    RequestableChannelClassSpec
     Types
     call-channel.h
     channel.h
     channel-class-spec.h
     channel-factory.h
     constants.h
+    contact-capabilities.h
     global.h
+    requestable-channel-class-spec.h
     types.h)
 
 # Headers file moc will be run on

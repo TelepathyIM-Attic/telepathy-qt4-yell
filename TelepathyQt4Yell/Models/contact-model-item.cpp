@@ -23,11 +23,13 @@
 #include "TelepathyQt4Yell/Models/_gen/contact-model-item.moc.hpp"
 
 #include <TelepathyQt4Yell/Models/AccountsModel>
+#include <TelepathyQt4Yell/CallChannel>
+#include <TelepathyQt4Yell/ContactCapabilities>
+#include <TelepathyQt4Yell/RequestableChannelClassSpec>
 
 #include <TelepathyQt4/AvatarData>
-#include <TelepathyQt4/ContactCapabilities>
 #include <TelepathyQt4/ContactManager>
-#include <TelepathyQt4/RequestableChannelClassSpec>
+#include <TelepathyQt4/ContactCapabilities>
 
 #include <QImage>
 
@@ -37,11 +39,14 @@ namespace Tpy
 struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT ContactModelItem::Private
 {
     Private(const Tp::ContactPtr &contact)
-        : mContact(contact)
+        : mContact(contact),
+          mCallContactCaps(contact->capabilities().allClassSpecs(),
+              contact->capabilities().isSpecificToContact())
     {
     }
 
     Tp::ContactPtr mContact;
+    Tpy::ContactCapabilities mCallContactCaps;
 };
 
 ContactModelItem::ContactModelItem(const Tp::ContactPtr &contact)
@@ -118,14 +123,26 @@ QVariant ContactModelItem::data(int role) const
             return QImage(mPriv->mContact->avatarData().fileName);
         case AccountsModel::TextChatCapabilityRole:
             return mPriv->mContact->capabilities().textChats();
-        case AccountsModel::MediaCallCapabilityRole:
+        case AccountsModel::StreamedMediaCallCapabilityRole:
             return mPriv->mContact->capabilities().streamedMediaCalls();
-        case AccountsModel::AudioCallCapabilityRole:
+        case AccountsModel::StreamedMediaAudioCallCapabilityRole:
             return mPriv->mContact->capabilities().streamedMediaAudioCalls();
-        case AccountsModel::VideoCallCapabilityRole:
+        case AccountsModel::StreamedMediaVideoCallCapabilityRole:
             return mPriv->mContact->capabilities().streamedMediaVideoCalls();
-        case AccountsModel::UpgradeCallCapabilityRole:
+        case AccountsModel::StreamedMediaVideoCallWithAudioCapabilityRole:
+            return mPriv->mContact->capabilities().streamedMediaVideoCallsWithAudio();
+        case AccountsModel::StreamedMediaUpgradeCallCapabilityRole:
             return mPriv->mContact->capabilities().upgradingStreamedMediaCalls();
+        case AccountsModel::MediaCallCapabilityRole:
+            return mPriv->mCallContactCaps.mediaCalls();
+        case AccountsModel::AudioCallCapabilityRole:
+            return mPriv->mCallContactCaps.audioCalls();
+        case AccountsModel::VideoCallCapabilityRole:
+            return mPriv->mCallContactCaps.videoCalls();
+        case AccountsModel::VideoCallWithAudioCapabilityRole:
+            return mPriv->mCallContactCaps.videoCallsWithAudio();
+        case AccountsModel::UpgradeCallCapabilityRole:
+            return mPriv->mCallContactCaps.upgradingCalls();
         case AccountsModel::FileTransferCapabilityRole: {
             foreach (const Tp::RequestableChannelClassSpec &rccSpec, mPriv->mContact->capabilities().allClassSpecs()) {
                 if (rccSpec.supports(Tp::RequestableChannelClassSpec::fileTransfer())) {

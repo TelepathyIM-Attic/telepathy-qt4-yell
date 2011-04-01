@@ -51,6 +51,7 @@ tpqt4_generate_mocs(${telepathy_qt4_yell_models_MOC_SRCS})
 
 # Create the library
 add_library(telepathy-qt4-yell-models STATIC ${telepathy_qt4_yell_models_SRCS} ${telepathy_qt4_yell_models_MOC_SRCS})
+add_dependencies(telepathy-qt4-yell-models telepathy-qt4-yell)
 
 # Link
 target_link_libraries(telepathy-qt4-yell-models

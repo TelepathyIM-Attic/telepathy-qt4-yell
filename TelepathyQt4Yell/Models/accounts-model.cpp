@@ -109,9 +109,15 @@ AccountsModel::AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent)
     roles[BlockedRole] = "blocked";
     roles[GroupsRole] = "groups";
     roles[TextChatCapabilityRole] = "textChat";
+    roles[StreamedMediaCallCapabilityRole] = "streamedMediaCall";
+    roles[StreamedMediaAudioCallCapabilityRole] = "streamedMediaAudioCall";
+    roles[StreamedMediaVideoCallCapabilityRole] = "streamedMediaVideoCall";
+    roles[StreamedMediaVideoCallWithAudioCapabilityRole] = "streamedMediaVideoCallWithAudio";
+    roles[StreamedMediaUpgradeCallCapabilityRole] = "streamedMediaUpgradeCall";
     roles[MediaCallCapabilityRole] = "mediaCall";
     roles[AudioCallCapabilityRole] = "audioCall";
     roles[VideoCallCapabilityRole] = "videoCall";
+    roles[VideoCallWithAudioCapabilityRole] = "videoCallWithAudio";
     roles[UpgradeCallCapabilityRole] = "upgradeCall";
     roles[FileTransferCapabilityRole] = "fileTransfer";
     setRoleNames(roles);
