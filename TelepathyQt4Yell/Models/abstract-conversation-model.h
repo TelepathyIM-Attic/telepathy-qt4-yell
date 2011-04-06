@@ -64,10 +64,6 @@ public:
 
     QModelIndex index(const ConversationItem *item) const;
 
-protected:
-    // work around moc namespace limitations
-    typedef Tp::ChannelChatState ChannelChatState;
-
 private:
     struct Private;
     friend struct Private;

@@ -86,7 +86,7 @@ void SessionConversationModel::onMessageReceived(const Tp::ReceivedMessage &mess
     mPriv->mChannel->acknowledge(QList<Tp::ReceivedMessage>() << message);
 }
 
-void SessionConversationModel::onChatStateChanged(const Tp::ContactPtr &contact, ChannelChatState state)
+void SessionConversationModel::onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state)
 {
     // ignore events originating from self
     if (contact == mPriv->mSelf) {
