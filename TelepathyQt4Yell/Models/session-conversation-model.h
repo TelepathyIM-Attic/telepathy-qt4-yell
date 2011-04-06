@@ -1,5 +1,5 @@
 /*
- * This file is part of TelepathyQt4
+ * This file is part of TelepathyQt4Yell Models
  *
  * Copyright (C) 2010 Collabora Ltd. <http://www.collabora.co.uk/>
  *
@@ -19,7 +19,7 @@
  */
 
 #ifndef _TelepathyQt4Yell_Models_session_conversation_model_h_HEADER_GUARD_
-#define _TelepathyQt4Yell_Models_conversation_model_h_HEADER_GUARD_
+#define _TelepathyQt4Yell_Models_session_conversation_model_h_HEADER_GUARD_
 
 #ifndef IN_TELEPATHY_QT4_YELL_MODELS_HEADER
 #error IN_TELEPATHY_QT4_YELL_MODELS_HEADER
