@@ -78,9 +78,9 @@ void SessionConversationModel::onMessageReceived(const Tp::ReceivedMessage &mess
 {
     // TODO: For the moment skip if the message is a delivery report
     // Later they could be used to report status on sent messages
-    if(message.messageType() != Tp::ChannelTextMessageTypeDeliveryReport) {
+    if (message.messageType() != Tp::ChannelTextMessageTypeDeliveryReport) {
         ConversationItem *item = new ConversationItem(message.sender(), message.sent(),
-                                                       message.text(), ConversationItem::INCOMING_MESSAGE, this);
+                                                      message.text(), ConversationItem::INCOMING_MESSAGE, this);
         addItem(item);
     }
     mPriv->mChannel->acknowledge(QList<Tp::ReceivedMessage>() << message);
