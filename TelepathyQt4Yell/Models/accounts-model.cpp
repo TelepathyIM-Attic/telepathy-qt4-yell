@@ -253,6 +253,17 @@ Tp::AccountPtr AccountsModel::accountForContactIndex(const QModelIndex &index) c
     }
 }
 
+Tp::ContactPtr AccountsModel::contactForIndex(const QModelIndex& index) const
+{
+    TreeNode *contactNode = mPriv->node(index);
+    ContactModelItem *item = qobject_cast<ContactModelItem *>(contactNode);
+    if (item) {
+        return item->contact();
+    } else {
+        return Tp::ContactPtr();
+    }
+}
+
 Qt::ItemFlags AccountsModel::flags(const QModelIndex &index) const
 {
     if (index.isValid()) {
