@@ -22,7 +22,8 @@
 
 #include "TelepathyQt4Yell/Models/_gen/abstract-conversation-model.moc.hpp"
 
-#include <TelepathyQt4Yell/Models/ConversationItem>
+#include <TelepathyQt4Yell/Models/CallEventItem>
+#include <TelepathyQt4Yell/Models/TextEventItem>
 
 #include <TelepathyQt4/AvatarData>
 #include <TelepathyQt4/PendingReady>
@@ -30,6 +31,7 @@
 
 #include <QPixmap>
 #include <QtAlgorithms>
+#include <QMetaObject>
 
 namespace Tpy
 {
@@ -40,7 +42,7 @@ struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT AbstractConversationModel::Private
     {
     }
 
-    QList<const ConversationItem *> mItems;
+    QList<const EventItem *> mItems;
 };
 
 AbstractConversationModel::AbstractConversationModel(QObject *parent)
@@ -48,12 +50,23 @@ AbstractConversationModel::AbstractConversationModel(QObject *parent)
       mPriv(new Private())
 {
     QHash<int, QByteArray> roles;
-    roles[TextRole] = "text";
-    roles[ContactRole] = "contact";
-    roles[ContactAvatarRole] = "contactAvatar";
-    roles[TimeRole] = "time";
-    roles[TypeRole] = "type";
+    roles[EventTypeRole] = "eventType";
+    roles[SenderRole] = "sender";
+    roles[SenderAvatarRole] = "senderAvatar";
+    roles[ReceiverRole] = "receiver";
+    roles[ReceiverAvatarRole] = "receiverAvatar";
+    roles[DateTimeRole] = "dateTime";
     roles[ItemRole] = "item";
+    roles[MessageTextRole] = "message";
+    roles[MessageTypeRole] = "messageType";
+    roles[MessageOriginRole] = "messageOrigin";
+    roles[CallDurationRole] = "callDuration";
+    roles[CallEndActorRole] = "callEndActor";
+    roles[CallEndActorAvatarRole] = "callEndActorAvatar";
+    roles[CallEndReasonRole] = "callEndReason";
+    roles[CallDetailedEndReasonRole] = "callDetailedEndReason";
+    roles[MissedCallRole] = "missedCall";
+    roles[RejectedCallRole] = "rejectedCall";
     setRoleNames(roles);
 }
 
@@ -74,35 +87,104 @@ QVariant AbstractConversationModel::data(const QModelIndex &index, int role) con
         return QVariant();
     }
 
-    const ConversationItem *item = mPriv->mItems[index.row()];
+    const EventItem *item = mPriv->mItems[index.row()];
     switch (role) {
-    case TextRole:
-        return item->text();
-    case ContactRole:
-        return item->contact()->alias();
-    case ContactAvatarRole:
-        return item->contact()->avatarData().fileName;
-    case TimeRole:
-        return item->time();
-    case TypeRole:
-        switch (item->type()) {
-        case ConversationItem::INCOMING_MESSAGE:
-            return QString::fromLatin1("incoming_message");
-        case ConversationItem::OUTGOING_MESSAGE:
-            return QString::fromLatin1("outgoing_message");
-        case ConversationItem::EVENT:
-            return QString::fromLatin1("event");
-        default:
-            return QString();
-        }
+    case EventTypeRole:
+        return QString::fromLatin1(item->metaObject()->className());
+    case SenderRole:
+        return item->sender()->alias();
+    case SenderAvatarRole:
+        return item->sender()->avatarData().fileName;
+    case ReceiverRole:
+        return item->receiver()->alias();
+    case ReceiverAvatarRole:
+        return item->receiver()->avatarData().fileName;
+    case DateTimeRole:
+        return item->dateTime();
     case ItemRole:
         return QVariant::fromValue(
                         const_cast<QObject *>(
                         static_cast<const QObject *>(item)));
+    case MessageTextRole: {
+        const TextEventItem *textEvent = qobject_cast<const TextEventItem*> (item);
+        if (textEvent) {
+            return textEvent->message();
+        }
+        return QString();
+    }
+    case MessageOriginRole: {
+        const TextEventItem *textEvent = qobject_cast<const TextEventItem*> (item);
+        if (textEvent) {
+            switch (textEvent->messageOrigin()) {
+            case TextEventItem::MessageOriginIncoming:
+                return QString::fromLatin1("incoming_message");
+            case TextEventItem::MessageOriginOutgoing:
+                return QString::fromLatin1("outgoing_message");
+            case TextEventItem::MessageOriginEvent:
+                return QString::fromLatin1("event");
+            }
+        }
+        return QString();
+    }
+    case MessageTypeRole: {
+        const TextEventItem *textEvent = qobject_cast<const TextEventItem*> (item);
+        if (textEvent) {
+            return textEvent->messageType();
+        }
+        return QVariant();
+    }
+    case CallDurationRole: {
+        const CallEventItem *callEvent = qobject_cast<const CallEventItem*> (item);
+        if (callEvent) {
+            return callEvent->duration();
+        }
+        return QVariant();
+    }
+    case CallEndActorRole: {
+        const CallEventItem *callEvent = qobject_cast<const CallEventItem*> (item);
+        if (callEvent) {
+            return callEvent->endActor()->alias();
+        }
+        return QVariant();
+    }
+    case CallEndActorAvatarRole: {
+        const CallEventItem *callEvent = qobject_cast<const CallEventItem*> (item);
+        if (callEvent) {
+            return callEvent->endActor()->avatarData().fileName;
+        }
+        return QVariant();
+    }
+    case CallEndReasonRole: {
+        const CallEventItem *callEvent = qobject_cast<const CallEventItem*> (item);
+        if (callEvent) {
+            return callEvent->endReason();
+        }
+        return QVariant();
+    }
+    case CallDetailedEndReasonRole: {
+        const CallEventItem *callEvent = qobject_cast<const CallEventItem*> (item);
+        if (callEvent) {
+            return callEvent->detailedEndReason();
+        }
+        return QVariant();
+    }
+    case MissedCallRole: {
+        const CallEventItem *callEvent = qobject_cast<const CallEventItem*> (item);
+        if (callEvent) {
+            return callEvent->missedCall();
+        }
+        return QVariant();
+    }
+    case RejectedCallRole: {
+        const CallEventItem *callEvent = qobject_cast<const CallEventItem*> (item);
+        if (callEvent) {
+            return callEvent->rejectedCall();
+        }
+        return QVariant();
+    }
     default:
         return QVariant();
     }
-
 }
 
 int AbstractConversationModel::rowCount(const QModelIndex &parent) const
@@ -110,14 +192,14 @@ int AbstractConversationModel::rowCount(const QModelIndex &parent) const
     return mPriv->mItems.count();
 }
 
-void AbstractConversationModel::addItem(const ConversationItem *item)
+void AbstractConversationModel::addItem(const EventItem *item)
 {
     beginInsertRows(QModelIndex(), mPriv->mItems.count(), mPriv->mItems.count());
     mPriv->mItems.append(item);
     endInsertRows();
 }
 
-bool AbstractConversationModel::deleteItem(const ConversationItem *item)
+bool AbstractConversationModel::deleteItem(const EventItem *item)
 {
     int num = mPriv->mItems.indexOf(item);
     if (num != -1) {
@@ -130,7 +212,7 @@ bool AbstractConversationModel::deleteItem(const ConversationItem *item)
     return false;
 }
 
-QModelIndex AbstractConversationModel::index(const ConversationItem *item) const
+QModelIndex AbstractConversationModel::index(const EventItem *item) const
 {
     int num = mPriv->mItems.indexOf(item);
     if (num != -1) {
@@ -140,10 +222,10 @@ QModelIndex AbstractConversationModel::index(const ConversationItem *item) const
     return QModelIndex();
 }
 
-void AbstractConversationModel::insertItems(QList<const ConversationItem *> items, int index)
+void AbstractConversationModel::insertItems(QList<const EventItem *> items, int index)
 {
     beginInsertRows(QModelIndex(), index, index + items.count() - 1);
-    const Tpy::ConversationItem *item;
+    const Tpy::EventItem *item;
     int i = 0;
     foreach(item, items) {
         mPriv->mItems.insert(index + i++, item);

@@ -18,8 +18,8 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _TelepathyQt4Yell_Models_session_conversation_model_h_HEADER_GUARD_
-#define _TelepathyQt4Yell_Models_session_conversation_model_h_HEADER_GUARD_
+#ifndef _TelepathyQt4Yell_Models_event_item_h_HEADER_GUARD_
+#define _TelepathyQt4Yell_Models_event_item_h_HEADER_GUARD_
 
 #ifndef IN_TELEPATHY_QT4_YELL_MODELS_HEADER
 #error IN_TELEPATHY_QT4_YELL_MODELS_HEADER
@@ -27,37 +27,27 @@
 
 #include <TelepathyQt4Yell/Models/Global>
 
-#include <TelepathyQt4/TextChannel>
 #include <TelepathyQt4/Types>
-#include <TelepathyQt4Yell/Models/AbstractConversationModel>
 
-#include <QAbstractListModel>
+#include <QDateTime>
+#include <QString>
 
 namespace Tpy
 {
 
-class EventItem;
-
-class TELEPATHY_QT4_YELL_MODELS_EXPORT SessionConversationModel : public AbstractConversationModel
+class TELEPATHY_QT4_YELL_MODELS_EXPORT EventItem : public QObject
 {
     Q_OBJECT
-    Q_DISABLE_COPY(SessionConversationModel)
+    Q_DISABLE_COPY(EventItem)
 
 public:
-    explicit SessionConversationModel(const Tp::ContactPtr &self, const Tp::TextChannelPtr &channel, QObject *parent = 0);
-    virtual ~SessionConversationModel();
+    EventItem(const Tp::ContactPtr &sender, const Tp::ContactPtr &receiver,
+        const QDateTime &dateTime, QObject *parent = 0);
+    virtual ~EventItem();
 
-    Q_INVOKABLE void sendMessage(const QString &text);
-    Q_INVOKABLE void disconnectChannelQueue();
-    Q_INVOKABLE void connectChannelQueue();
-
-    Tp::ContactPtr selfContact() const;
-
-protected Q_SLOTS:
-    virtual void onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state);
-
-private Q_SLOTS:
-    void onMessageReceived(const Tp::ReceivedMessage &message);
+    Tp::ContactPtr sender() const;
+    Tp::ContactPtr receiver() const;
+    QDateTime dateTime() const;
 
 private:
     struct Private;
@@ -67,4 +57,4 @@ private:
 
 }
 
-#endif // _TelepathyQt4Yell_Models_session_conversation_model_h_HEADER_GUARD_
+#endif // _TelepathyQt4Yell_Models_event_item_h_HEADER_GUARD_

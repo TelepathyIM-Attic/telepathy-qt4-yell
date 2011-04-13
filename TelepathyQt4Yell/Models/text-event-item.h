@@ -18,15 +18,17 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _TelepathyQt4Yell_Models_conversation_item_h_HEADER_GUARD_
-#define _TelepathyQt4Yell_Models_conversation_item_h_HEADER_GUARD_
+#ifndef _TelepathyQt4Yell_Models_text_event_item_h_HEADER_GUARD_
+#define _TelepathyQt4Yell_Models_text_event_item_h_HEADER_GUARD_
 
 #ifndef IN_TELEPATHY_QT4_YELL_MODELS_HEADER
 #error IN_TELEPATHY_QT4_YELL_MODELS_HEADER
 #endif
 
+#include <TelepathyQt4Yell/Models/EventItem>
 #include <TelepathyQt4Yell/Models/Global>
 
+#include <TelepathyQt4/Constants>
 #include <TelepathyQt4/Types>
 
 #include <QDateTime>
@@ -35,26 +37,26 @@
 namespace Tpy
 {
 
-class TELEPATHY_QT4_YELL_MODELS_EXPORT ConversationItem : public QObject
+class TELEPATHY_QT4_YELL_MODELS_EXPORT TextEventItem : public EventItem
 {
     Q_OBJECT
-    Q_DISABLE_COPY(ConversationItem)
+    Q_DISABLE_COPY(TextEventItem)
 
 public:
-    enum Type {
-        INCOMING_MESSAGE,
-        OUTGOING_MESSAGE,
-        EVENT
+    enum MessageOrigin {
+        MessageOriginIncoming,
+        MessageOriginOutgoing,
+        MessageOriginEvent
     };
 
-    ConversationItem(const Tp::ContactPtr &contact, const QDateTime &time,
-            const QString &text, Type type, QObject *parent = 0);
-    virtual ~ConversationItem();
+    TextEventItem(const Tp::ContactPtr &sender, const Tp::ContactPtr &receiver,
+        const QDateTime &time, const QString &message, MessageOrigin origin,
+        Tp::ChannelTextMessageType messageType, QObject *parent = 0);
+    virtual ~TextEventItem();
 
-    Tp::ContactPtr contact() const;
-    QDateTime time() const;
-    QString text() const;
-    Type type() const;
+    QString message() const;
+    MessageOrigin messageOrigin() const;
+    Tp::ChannelTextMessageType messageType() const;
 
 private:
     struct Private;
@@ -64,4 +66,4 @@ private:
 
 }
 
-#endif // _TelepathyQt4Yell_Models_conversation_item_h_HEADER_GUARD_
+#endif // _TelepathyQt4Yell_Models_text_event_item_h_HEADER_GUARD_

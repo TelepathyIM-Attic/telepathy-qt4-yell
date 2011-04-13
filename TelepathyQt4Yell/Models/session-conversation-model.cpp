@@ -22,7 +22,7 @@
 
 #include "TelepathyQt4Yell/Models/_gen/session-conversation-model.moc.hpp"
 
-#include <TelepathyQt4Yell/Models/ConversationItem>
+#include <TelepathyQt4Yell/Models/TextEventItem>
 
 #include <TelepathyQt4/AvatarData>
 #include <TelepathyQt4/PendingReady>
@@ -62,11 +62,13 @@ SessionConversationModel::~SessionConversationModel()
 
 void SessionConversationModel::sendMessage(const QString &text)
 {
-    ConversationItem *item = new ConversationItem(mPriv->mSelf, QDateTime::currentDateTime(),
-                                                  text, ConversationItem::OUTGOING_MESSAGE, this);
+    // FIXME get receiver ?
+    TextEventItem *item = new TextEventItem(mPriv->mSelf, Tp::ContactPtr(),
+        QDateTime::currentDateTime(), text, TextEventItem::MessageOriginOutgoing,
+        Tp::ChannelTextMessageTypeNormal, this);
     addItem(item);
 
-    mPriv->mChannel->send(item->text());
+    mPriv->mChannel->send(item->message());
 }
 
 Tp::ContactPtr SessionConversationModel::selfContact() const
@@ -79,8 +81,9 @@ void SessionConversationModel::onMessageReceived(const Tp::ReceivedMessage &mess
     // TODO: For the moment skip if the message is a delivery report
     // Later they could be used to report status on sent messages
     if (message.messageType() != Tp::ChannelTextMessageTypeDeliveryReport) {
-        ConversationItem *item = new ConversationItem(message.sender(), message.sent(),
-                                                      message.text(), ConversationItem::INCOMING_MESSAGE, this);
+        TextEventItem *item = new TextEventItem(
+            message.sender(), mPriv->mSelf, message.sent(), message.text(),
+            TextEventItem::MessageOriginIncoming, message.messageType(), this);
         addItem(item);
     }
     mPriv->mChannel->acknowledge(QList<Tp::ReceivedMessage>() << message);
@@ -95,8 +98,9 @@ void SessionConversationModel::onChatStateChanged(const Tp::ContactPtr &contact,
 
     if (state == Tp::ChannelChatStateGone) {
         QString message = QString::fromLatin1("%1 left the chat").arg(contact->alias());
-        ConversationItem *item = new ConversationItem(contact, QDateTime::currentDateTime(), message,
-                                                      ConversationItem::EVENT, this);
+        TextEventItem *item = new TextEventItem(contact, mPriv->mSelf,
+            QDateTime::currentDateTime(), message, TextEventItem::MessageOriginEvent,
+            Tp::ChannelTextMessageTypeNormal, this);
         addItem(item);
     }
 }
