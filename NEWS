@@ -7,7 +7,7 @@ Enhancements:
  * ...
 
 Fixes:
- * ...
+ * Only emit contacts added and removed signals if there are contacts actually being added/removed
 
 telepathy-qt4-yell 0.1.1 (2011-02-16)
 ======================================
