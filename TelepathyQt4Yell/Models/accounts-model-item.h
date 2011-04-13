@@ -55,6 +55,8 @@ public:
     Q_INVOKABLE void setRequestedPresence(int type, const QString &status, const QString &statusMessage);
 
     void clearContacts();
+
+public Q_SLOTS:
     void addKnownContacts();
 
 Q_SIGNALS:
@@ -68,6 +70,7 @@ private Q_SLOTS:
     void onStatusChanged(Tp::ConnectionStatus status);
 
     void onConnectionChanged(const Tp::ConnectionPtr &connection);
+    void onContactManagerStateChanged(Tp::ContactListState state);
     void onContactsChanged(const Tp::Contacts &added,
                            const Tp::Contacts &removed);
 
