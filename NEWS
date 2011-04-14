@@ -4,10 +4,11 @@ telepathy-qt4-yell 0.1.2 (UNRELEASED)
 The "..." release.
 
 Enhancements:
- * ...
+ * Add some convenience methods to the AccountsModel
 
 Fixes:
- * ...
+ * Fix the contact list loading
+ * Fix filtering of accounts through proxies when the connection status changes
 
 telepathy-qt4-yell 0.1.1 (2011-02-16)
 ======================================
