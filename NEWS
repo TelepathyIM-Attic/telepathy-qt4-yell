@@ -1,15 +1,23 @@
-telepathy-qt4-yell 0.1.2 (UNRELEASED)
+telepathy-qt4-yell 0.1.2 (2011-04-14)
 ======================================
 
-The "..." release.
+The "can I call" release.
 
 Enhancements:
- * Add some convenience methods to the AccountsModel
+ * Added ContactCapabilities and RequestableChannelClass support for Call.
+ * Added some convenience methods to the AccountsModel.
+ * Refactored ConversationModel into two classes: AbstractConversationModel
+   which is just a storage class, and SessionConversationModel which stores a
+   chat conversation for a chat session with a given contact.
+ * Updated cmake module to find TelepathyQt4.
 
 Fixes:
- * Fix the contact list loading
- * Fix filtering of accounts through proxies when the connection status changes
- * Only emit contacts added and removed signals if there are contacts actually being added/removed
+ * Added required linking to telepathy-glib.
+ * Fixed contact list loading.
+ * Fixed filtering of accounts through proxies when the connection status
+   changes.
+ * Only emit contacts added and removed signals if there are contacts actually
+   being added/removed.
 
 telepathy-qt4-yell 0.1.1 (2011-02-16)
 ======================================
