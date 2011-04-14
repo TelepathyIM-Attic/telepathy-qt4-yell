@@ -9,6 +9,7 @@ Enhancements:
 Fixes:
  * Fix the contact list loading
  * Fix filtering of accounts through proxies when the connection status changes
+ * Only emit contacts added and removed signals if there are contacts actually being added/removed
 
 telepathy-qt4-yell 0.1.1 (2011-02-16)
 ======================================

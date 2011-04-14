@@ -280,7 +280,9 @@ void AccountsModelItem::onContactsChanged(const Tp::Contacts &addedContacts,
             newNodes.append(new ContactModelItem(contact));
         }
     }
-    emit childrenAdded(this, newNodes);
+    if (newNodes.count()) {
+        emit childrenAdded(this, newNodes);
+    }
 }
 
 void AccountsModelItem::onStatusChanged(Tp::ConnectionStatus status)
@@ -298,7 +300,9 @@ void AccountsModelItem::onConnectionChanged(const Tp::ConnectionPtr &connection)
     if (connection.isNull()
             || !connection->isValid()
             || connection->status() == Tp::ConnectionStatusDisconnected) {
-        emit childrenRemoved(this, 0, size() - 1);
+        if (size() > 0) {
+            emit childrenRemoved(this, 0, size() - 1);
+        }
         return;
     }
 
