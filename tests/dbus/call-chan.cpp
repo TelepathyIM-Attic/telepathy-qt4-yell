@@ -429,9 +429,6 @@ void TestCallChan::testOutgoingCall()
     QVERIFY(connect(stream.data(),
                     SIGNAL(localSendingStateChanged(Tpy::SendingState)),
                     SLOT(onLocalSendingStateChanged(Tpy::SendingState))));
-    QVERIFY(connect(stream.data(),
-                    SIGNAL(remoteSendingStateChanged(const QHash<Tp::ContactPtr, Tpy::SendingState> &)),
-                    SLOT(onRemoteSendingStateChanged(const QHash<Tp::ContactPtr, Tpy::SendingState> &))));
 
     qDebug() << "stopping sending";
 
@@ -485,6 +482,10 @@ void TestCallChan::testOutgoingCall()
 
     mRSSCState = RSSCStateInitial;
     mSuccessfulRequestReceivings = 0;
+
+    QVERIFY(connect(stream.data(),
+                    SIGNAL(remoteSendingStateChanged(const QHash<Tp::ContactPtr, Tpy::SendingState> &)),
+                    SLOT(onRemoteSendingStateChanged(const QHash<Tp::ContactPtr, Tpy::SendingState> &))));
 
     // test content receiving changed
     QVERIFY(connect(stream->requestReceiving(otherContact, true),
