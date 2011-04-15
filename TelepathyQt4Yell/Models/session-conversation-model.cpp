@@ -26,6 +26,8 @@
 #include <TelepathyQt4Yell/Models/CustomEventItem>
 
 #include <TelepathyQt4/AvatarData>
+#include <TelepathyQt4/Connection>
+#include <TelepathyQt4/ContactManager>
 #include <TelepathyQt4/PendingReady>
 #include <TelepathyQt4/ReceivedMessage>
 
@@ -63,8 +65,15 @@ SessionConversationModel::~SessionConversationModel()
 
 void SessionConversationModel::sendMessage(const QString &text)
 {
-    // FIXME get receiver ?
-    TextEventItem *item = new TextEventItem(mPriv->mSelf, Tp::ContactPtr(),
+    Tp::ContactPtr receiver;
+    if (!mPriv->mChannel.isNull() &&
+        mPriv->mChannel->targetHandle() != 0 &&
+        !mPriv->mChannel->connection().isNull() &&
+        !mPriv->mChannel->connection()->contactManager().isNull()) {
+        uint handle = mPriv->mChannel->targetHandle();
+        receiver = mPriv->mChannel->connection()->contactManager()->lookupContactByHandle(handle);
+    }
+    TextEventItem *item = new TextEventItem(mPriv->mSelf, receiver,
         QDateTime::currentDateTime(), text, Tp::ChannelTextMessageTypeNormal, this);
     addItem(item);
 
