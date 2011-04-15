@@ -53,14 +53,15 @@ public:
         ItemRole,
         MessageTextRole,
         MessageTypeRole,
-        MessageOriginRole,
         CallDurationRole,
         CallEndActorRole,
         CallEndActorAvatarRole,
         CallEndReasonRole,
         CallDetailedEndReasonRole,
         MissedCallRole,
-        RejectedCallRole
+        RejectedCallRole,
+        CustomEventTextRole,
+        CustomEventTypeRole
     };
 
     explicit AbstractConversationModel(QObject *parent = 0);

@@ -11,6 +11,7 @@ set(telepathy_qt4_yell_models_SRCS
     avatar-image-provider.cpp
     call-event-item.cpp
     contact-model-item.cpp
+    custom-event-item.cpp
     event-item.cpp
     flat-model-proxy.cpp
     session-conversation-model.cpp
@@ -25,6 +26,7 @@ set(telepathy_qt4_yell_models_MOC_SRCS
     avatar-image-provider.h
     call-event-item.h
     contact-model-item.h
+    custom-event-item.h
     event-item.h
     flat-model-proxy.h
     session-conversation-model.h
@@ -39,6 +41,7 @@ set(telepathy_qt4_yell_models_HEADERS
     AvatarImageProvider
     CallEventItem
     ContactModelItem
+    CustomEventItem
     EventItem
     FlatModelProxy
     Global
@@ -51,6 +54,7 @@ set(telepathy_qt4_yell_models_HEADERS
     avatar-image-provider.h
     call-event-item.h
     contact-model-item.h
+    custom-event-item.h
     event-item.h
     flat-model-proxy.h
     global.h

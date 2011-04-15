@@ -23,6 +23,7 @@
 #include "TelepathyQt4Yell/Models/_gen/abstract-conversation-model.moc.hpp"
 
 #include <TelepathyQt4Yell/Models/CallEventItem>
+#include <TelepathyQt4Yell/Models/CustomEventItem>
 #include <TelepathyQt4Yell/Models/TextEventItem>
 
 #include <TelepathyQt4/AvatarData>
@@ -57,9 +58,8 @@ AbstractConversationModel::AbstractConversationModel(QObject *parent)
     roles[ReceiverAvatarRole] = "receiverAvatar";
     roles[DateTimeRole] = "dateTime";
     roles[ItemRole] = "item";
-    roles[MessageTextRole] = "message";
+    roles[MessageTextRole] = "messageText";
     roles[MessageTypeRole] = "messageType";
-    roles[MessageOriginRole] = "messageOrigin";
     roles[CallDurationRole] = "callDuration";
     roles[CallEndActorRole] = "callEndActor";
     roles[CallEndActorAvatarRole] = "callEndActorAvatar";
@@ -67,6 +67,8 @@ AbstractConversationModel::AbstractConversationModel(QObject *parent)
     roles[CallDetailedEndReasonRole] = "callDetailedEndReason";
     roles[MissedCallRole] = "missedCall";
     roles[RejectedCallRole] = "rejectedCall";
+    roles[CustomEventTextRole] = "customEventText";
+    roles[CustomEventTypeRole] = "customEventType";
     setRoleNames(roles);
 }
 
@@ -88,17 +90,33 @@ QVariant AbstractConversationModel::data(const QModelIndex &index, int role) con
     }
 
     const EventItem *item = mPriv->mItems[index.row()];
+    if (!item) {
+        return QVariant();
+    }
+
     switch (role) {
     case EventTypeRole:
         return QString::fromLatin1(item->metaObject()->className());
     case SenderRole:
-        return item->sender()->alias();
+        if (!item->sender().isNull()) {
+            return item->sender()->alias();
+        }
+        return QVariant();
     case SenderAvatarRole:
-        return item->sender()->avatarData().fileName;
+        if (!item->sender().isNull()) {
+            return item->sender()->avatarData().fileName;
+        }
+        return QVariant();
     case ReceiverRole:
-        return item->receiver()->alias();
+        if (!item->receiver().isNull()) {
+            return item->receiver()->alias();
+        }
+        return QVariant();
     case ReceiverAvatarRole:
-        return item->receiver()->avatarData().fileName;
+        if (!item->receiver().isNull()) {
+            return item->receiver()->avatarData().fileName;
+        }
+        return QVariant();
     case DateTimeRole:
         return item->dateTime();
     case ItemRole:
@@ -108,23 +126,9 @@ QVariant AbstractConversationModel::data(const QModelIndex &index, int role) con
     case MessageTextRole: {
         const TextEventItem *textEvent = qobject_cast<const TextEventItem*> (item);
         if (textEvent) {
-            return textEvent->message();
+            return textEvent->messageText();
         }
-        return QString();
-    }
-    case MessageOriginRole: {
-        const TextEventItem *textEvent = qobject_cast<const TextEventItem*> (item);
-        if (textEvent) {
-            switch (textEvent->messageOrigin()) {
-            case TextEventItem::MessageOriginIncoming:
-                return QString::fromLatin1("incoming_message");
-            case TextEventItem::MessageOriginOutgoing:
-                return QString::fromLatin1("outgoing_message");
-            case TextEventItem::MessageOriginEvent:
-                return QString::fromLatin1("event");
-            }
-        }
-        return QString();
+        return QVariant();
     }
     case MessageTypeRole: {
         const TextEventItem *textEvent = qobject_cast<const TextEventItem*> (item);
@@ -142,14 +146,14 @@ QVariant AbstractConversationModel::data(const QModelIndex &index, int role) con
     }
     case CallEndActorRole: {
         const CallEventItem *callEvent = qobject_cast<const CallEventItem*> (item);
-        if (callEvent) {
+        if (callEvent && !callEvent->endActor().isNull()) {
             return callEvent->endActor()->alias();
         }
         return QVariant();
     }
     case CallEndActorAvatarRole: {
         const CallEventItem *callEvent = qobject_cast<const CallEventItem*> (item);
-        if (callEvent) {
+        if (callEvent && !callEvent->endActor().isNull()) {
             return callEvent->endActor()->avatarData().fileName;
         }
         return QVariant();
@@ -179,6 +183,20 @@ QVariant AbstractConversationModel::data(const QModelIndex &index, int role) con
         const CallEventItem *callEvent = qobject_cast<const CallEventItem*> (item);
         if (callEvent) {
             return callEvent->rejectedCall();
+        }
+        return QVariant();
+    }
+    case CustomEventTextRole: {
+        const CustomEventItem *customEvent = qobject_cast<const CustomEventItem*> (item);
+        if (customEvent) {
+            return customEvent->customEventText();
+        }
+        return QVariant();
+    }
+    case CustomEventTypeRole: {
+        const CustomEventItem *customEvent = qobject_cast<const CustomEventItem*> (item);
+        if (customEvent) {
+            return customEvent->customEventType();
         }
         return QVariant();
     }

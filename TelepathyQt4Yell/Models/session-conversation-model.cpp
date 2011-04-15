@@ -23,6 +23,7 @@
 #include "TelepathyQt4Yell/Models/_gen/session-conversation-model.moc.hpp"
 
 #include <TelepathyQt4Yell/Models/TextEventItem>
+#include <TelepathyQt4Yell/Models/CustomEventItem>
 
 #include <TelepathyQt4/AvatarData>
 #include <TelepathyQt4/PendingReady>
@@ -64,11 +65,10 @@ void SessionConversationModel::sendMessage(const QString &text)
 {
     // FIXME get receiver ?
     TextEventItem *item = new TextEventItem(mPriv->mSelf, Tp::ContactPtr(),
-        QDateTime::currentDateTime(), text, TextEventItem::MessageOriginOutgoing,
-        Tp::ChannelTextMessageTypeNormal, this);
+        QDateTime::currentDateTime(), text, Tp::ChannelTextMessageTypeNormal, this);
     addItem(item);
 
-    mPriv->mChannel->send(item->message());
+    mPriv->mChannel->send(item->messageText());
 }
 
 Tp::ContactPtr SessionConversationModel::selfContact() const
@@ -81,9 +81,8 @@ void SessionConversationModel::onMessageReceived(const Tp::ReceivedMessage &mess
     // TODO: For the moment skip if the message is a delivery report
     // Later they could be used to report status on sent messages
     if (message.messageType() != Tp::ChannelTextMessageTypeDeliveryReport) {
-        TextEventItem *item = new TextEventItem(
-            message.sender(), mPriv->mSelf, message.sent(), message.text(),
-            TextEventItem::MessageOriginIncoming, message.messageType(), this);
+        TextEventItem *item = new TextEventItem(message.sender(), mPriv->mSelf,
+            message.sent(), message.text(), message.messageType(), this);
         addItem(item);
     }
     mPriv->mChannel->acknowledge(QList<Tp::ReceivedMessage>() << message);
@@ -98,9 +97,8 @@ void SessionConversationModel::onChatStateChanged(const Tp::ContactPtr &contact,
 
     if (state == Tp::ChannelChatStateGone) {
         QString message = QString::fromLatin1("%1 left the chat").arg(contact->alias());
-        TextEventItem *item = new TextEventItem(contact, mPriv->mSelf,
-            QDateTime::currentDateTime(), message, TextEventItem::MessageOriginEvent,
-            Tp::ChannelTextMessageTypeNormal, this);
+        CustomEventItem *item = new CustomEventItem(contact, mPriv->mSelf,
+            QDateTime::currentDateTime(), message, CustomEventItem::CustomEventUserLeftChat, this);
         addItem(item);
     }
 }
