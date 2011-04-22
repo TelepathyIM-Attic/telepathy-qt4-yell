@@ -18,46 +18,45 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _TelepathyQt4Yell_Models_session_conversation_model_h_HEADER_GUARD_
-#define _TelepathyQt4Yell_Models_session_conversation_model_h_HEADER_GUARD_
+#ifndef _TelepathyQt4Yell_Models_call_event_item_h_HEADER_GUARD_
+#define _TelepathyQt4Yell_Models_call_event_item_h_HEADER_GUARD_
 
 #ifndef IN_TELEPATHY_QT4_YELL_MODELS_HEADER
 #error IN_TELEPATHY_QT4_YELL_MODELS_HEADER
 #endif
 
+#include <TelepathyQt4Yell/Models/EventItem>
 #include <TelepathyQt4Yell/Models/Global>
+#include <TelepathyQt4Yell/Constants>
 
-#include <TelepathyQt4/TextChannel>
 #include <TelepathyQt4/Types>
-#include <TelepathyQt4Yell/Models/AbstractConversationModel>
 
-#include <QAbstractListModel>
+#include <QDateTime>
+#include <QString>
 
 namespace Tpy
 {
 
-class EventItem;
-
-class TELEPATHY_QT4_YELL_MODELS_EXPORT SessionConversationModel : public AbstractConversationModel
+class TELEPATHY_QT4_YELL_MODELS_EXPORT CallEventItem : public EventItem
 {
     Q_OBJECT
-    Q_DISABLE_COPY(SessionConversationModel)
+    Q_DISABLE_COPY(CallEventItem)
 
 public:
-    explicit SessionConversationModel(const Tp::ContactPtr &self, const Tp::TextChannelPtr &channel, QObject *parent = 0);
-    virtual ~SessionConversationModel();
+    CallEventItem(const Tp::ContactPtr &sender,
+        const Tp::ContactPtr &receiver, const QDateTime &time,
+        const QTime &duration, Tp::ContactPtr &endActor,
+        Tpy::CallStateChangeReason &endReason, const QString &detailedEndReason,
+        QObject *parent = 0);
+    virtual ~CallEventItem();
 
-    Q_INVOKABLE void sendMessage(const QString &text);
-    Q_INVOKABLE void disconnectChannelQueue();
-    Q_INVOKABLE void connectChannelQueue();
+    QTime duration() const;
+    Tp::ContactPtr endActor() const;
+    Tpy::CallStateChangeReason endReason() const;
+    QString detailedEndReason() const;
 
-    Tp::ContactPtr selfContact() const;
-
-protected Q_SLOTS:
-    virtual void onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state);
-
-private Q_SLOTS:
-    void onMessageReceived(const Tp::ReceivedMessage &message);
+    bool missedCall() const;
+    bool rejectedCall() const;
 
 private:
     struct Private;
@@ -67,4 +66,4 @@ private:
 
 }
 
-#endif // _TelepathyQt4Yell_Models_session_conversation_model_h_HEADER_GUARD_
+#endif // _TelepathyQt4Yell_Models_call_event_item_h_HEADER_GUARD_

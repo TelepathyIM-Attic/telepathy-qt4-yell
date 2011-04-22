@@ -35,7 +35,7 @@
 namespace Tpy
 {
 
-class ConversationItem;
+class EventItem;
 
 class TELEPATHY_QT4_YELL_MODELS_EXPORT AbstractConversationModel : public QAbstractListModel
 {
@@ -44,12 +44,24 @@ class TELEPATHY_QT4_YELL_MODELS_EXPORT AbstractConversationModel : public QAbstr
 
 public:
     enum Role {
-        TextRole = Qt::UserRole,
-        ContactRole,
-        ContactAvatarRole,
-        TimeRole,
-        TypeRole,
-        ItemRole
+        EventTypeRole = Qt::UserRole,
+        SenderRole,
+        SenderAvatarRole,
+        ReceiverRole,
+        ReceiverAvatarRole,
+        DateTimeRole,
+        ItemRole,
+        MessageTextRole,
+        MessageTypeRole,
+        CallDurationRole,
+        CallEndActorRole,
+        CallEndActorAvatarRole,
+        CallEndReasonRole,
+        CallDetailedEndReasonRole,
+        MissedCallRole,
+        RejectedCallRole,
+        CustomEventTextRole,
+        CustomEventTypeRole
     };
 
     explicit AbstractConversationModel(QObject *parent = 0);
@@ -58,11 +70,11 @@ public:
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
 
-    void addItem(const ConversationItem *item);
-    void insertItems(QList<const ConversationItem *> items, int index = 0);
-    bool deleteItem(const ConversationItem *item);
+    void addItem(const EventItem *item);
+    void insertItems(QList<const EventItem *> items, int index = 0);
+    bool deleteItem(const EventItem *item);
 
-    QModelIndex index(const ConversationItem *item) const;
+    QModelIndex index(const EventItem *item) const;
 
 private:
     struct Private;

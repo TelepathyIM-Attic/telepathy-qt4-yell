@@ -18,43 +18,43 @@
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-#ifndef _TelepathyQt4Yell_Models_conversation_item_h_HEADER_GUARD_
-#define _TelepathyQt4Yell_Models_conversation_item_h_HEADER_GUARD_
+#ifndef _TelepathyQt4Yell_Models_custom_event_item_h_HEADER_GUARD_
+#define _TelepathyQt4Yell_Models_custom_event_item_h_HEADER_GUARD_
 
 #ifndef IN_TELEPATHY_QT4_YELL_MODELS_HEADER
 #error IN_TELEPATHY_QT4_YELL_MODELS_HEADER
 #endif
 
+#include <TelepathyQt4Yell/Models/EventItem>
 #include <TelepathyQt4Yell/Models/Global>
 
+#include <TelepathyQt4/Constants>
 #include <TelepathyQt4/Types>
-
-#include <QDateTime>
-#include <QString>
 
 namespace Tpy
 {
 
-class TELEPATHY_QT4_YELL_MODELS_EXPORT ConversationItem : public QObject
+class TELEPATHY_QT4_YELL_MODELS_EXPORT CustomEventItem : public EventItem
 {
     Q_OBJECT
-    Q_DISABLE_COPY(ConversationItem)
+    Q_DISABLE_COPY(CustomEventItem)
 
 public:
-    enum Type {
-        INCOMING_MESSAGE,
-        OUTGOING_MESSAGE,
-        EVENT
+
+    enum CustomEventType {
+        CustomEventUserLeftChat = 0,
+
+        // User defined values
+        CustomEventUserDefined = 10000
     };
 
-    ConversationItem(const Tp::ContactPtr &contact, const QDateTime &time,
-            const QString &text, Type type, QObject *parent = 0);
-    virtual ~ConversationItem();
+    CustomEventItem(const Tp::ContactPtr &sender, const Tp::ContactPtr &receiver,
+        const QDateTime &time, const QString &customEventText, CustomEventType customEventType,
+        QObject *parent = 0);
+    virtual ~CustomEventItem();
 
-    Tp::ContactPtr contact() const;
-    QDateTime time() const;
-    QString text() const;
-    Type type() const;
+    QString customEventText() const;
+    CustomEventType customEventType() const;
 
 private:
     struct Private;
@@ -64,4 +64,4 @@ private:
 
 }
 
-#endif // _TelepathyQt4Yell_Models_conversation_item_h_HEADER_GUARD_
+#endif // _TelepathyQt4Yell_Models_custom_event_item_h_HEADER_GUARD_

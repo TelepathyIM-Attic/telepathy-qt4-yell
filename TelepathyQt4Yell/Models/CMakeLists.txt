@@ -5,49 +5,61 @@ add_definitions(-DBUILDING_TELEPATHY_QT4_YELL_MODELS)
 
 # Set source files
 set(telepathy_qt4_yell_models_SRCS
+    abstract-conversation-model.cpp
     accounts-model.cpp
     accounts-model-item.cpp
     avatar-image-provider.cpp
+    call-event-item.cpp
     contact-model-item.cpp
-    conversation-item.cpp
-    abstract-conversation-model.cpp
-    session-conversation-model.cpp
+    custom-event-item.cpp
+    event-item.cpp
     flat-model-proxy.cpp
+    session-conversation-model.cpp
+    text-event-item.cpp
     tree-node.cpp
 )
 
 set(telepathy_qt4_yell_models_MOC_SRCS
+    abstract-conversation-model.h
     accounts-model.h
     accounts-model-item.h
     avatar-image-provider.h
+    call-event-item.h
     contact-model-item.h
-    conversation-item.h
-    abstract-conversation-model.h
-    session-conversation-model.h
+    custom-event-item.h
+    event-item.h
     flat-model-proxy.h
+    session-conversation-model.h
+    text-event-item.h
     tree-node.h
 )
 
 set(telepathy_qt4_yell_models_HEADERS
+    AbstractConversationModel
     AccountsModel
     AccountsModelItem
     AvatarImageProvider
+    CallEventItem
     ContactModelItem
-    ConversationItem
-    AbstractConversationModel
-    SessionConversationModel
+    CustomEventItem
+    EventItem
     FlatModelProxy
     Global
+    SessionConversationModel
+    TextEventItem
     TreeNode
+    abstract-conversation-model.h
     accounts-model.h
     accounts-model-item.h
     avatar-image-provider.h
+    call-event-item.h
     contact-model-item.h
-    conversation-item.h
-    abstract-conversation-model.h
-    session-conversation-model.h
+    custom-event-item.h
+    event-item.h
     flat-model-proxy.h
     global.h
+    session-conversation-model.h
+    text-event-item.h
     tree-node.h
 )
 
