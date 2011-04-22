@@ -1,13 +1,10 @@
-telepathy-qt4-yell 0.1.3 (UNRELEASED)
+telepathy-qt4-yell 0.1.3 (2011-04-22)
 ======================================
 
-The "..." release.
+The "time-shifting" release.
 
 Enhancements:
- * ...
-
-Fixes:
- * ...
+ * Refactored the conversation item into purpose-specific items
 
 telepathy-qt4-yell 0.1.2 (2011-04-14)
 ======================================
