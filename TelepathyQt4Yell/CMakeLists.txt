@@ -26,6 +26,7 @@ set(telepathy_qt4_yell_HEADERS
     Channel
     ChannelClassSpec
     ChannelFactory
+    ChannelInterfaceCredentialsStorageInterface
     Constants
     ContactCapabilities
     Global
