@@ -251,4 +251,17 @@ void AbstractConversationModel::insertItems(QList<const EventItem *> items, int 
     endInsertRows();
 }
 
+bool AbstractConversationModel::removeRows(int row, int count, const QModelIndex &parent)
+{
+    if (row >= 0 && (row + count) <= mPriv->mItems.count()) {
+        beginRemoveRows(parent, row, row + count - 1);
+        while(count-- >= 0) {
+            mPriv->mItems.removeAt(row);
+        }
+        endRemoveRows();
+        return true;
+    }
+    return false;
+}
+
 }
