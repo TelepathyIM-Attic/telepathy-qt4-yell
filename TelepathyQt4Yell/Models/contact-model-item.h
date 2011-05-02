@@ -48,6 +48,7 @@ public:
 
 public Q_SLOTS:
     void onChanged();
+    void onCapabilitiesChanged();
 
 private:
     struct Private;
