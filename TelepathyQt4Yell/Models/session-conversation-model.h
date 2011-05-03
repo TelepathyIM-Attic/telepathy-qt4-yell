@@ -42,6 +42,7 @@ class TELEPATHY_QT4_YELL_MODELS_EXPORT SessionConversationModel : public Abstrac
 {
     Q_OBJECT
     Q_DISABLE_COPY(SessionConversationModel)
+    Q_PROPERTY(int numPendingMessages READ numPendingMessages NOTIFY numPendingMessagesChanged)
 
 public:
     explicit SessionConversationModel(const Tp::ContactPtr &self, const Tp::TextChannelPtr &channel, QObject *parent = 0);
@@ -50,8 +51,13 @@ public:
     Q_INVOKABLE void sendMessage(const QString &text);
     Q_INVOKABLE void disconnectChannelQueue();
     Q_INVOKABLE void connectChannelQueue();
+    Q_INVOKABLE bool channelQueueConnected() const;
+    int numPendingMessages() const;
 
     Tp::ContactPtr selfContact() const;
+
+Q_SIGNALS:
+    void numPendingMessagesChanged();
 
 protected Q_SLOTS:
     virtual void onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state);

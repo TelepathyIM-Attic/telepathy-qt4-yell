@@ -41,18 +41,25 @@ struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT SessionConversationModel::Private
 {
     Private(const Tp::ContactPtr &self, const Tp::TextChannelPtr &channel)
         : mSelf(self),
-          mChannel(channel)
+          mChannel(channel),
+          mChannelQueueConnected(false),
+          mNumPendingMessages(0)
     {
     }
 
     Tp::ContactPtr mSelf;
     Tp::TextChannelPtr mChannel;
+    bool mChannelQueueConnected;
+    int mNumPendingMessages;
 };
 
 SessionConversationModel::SessionConversationModel(const Tp::ContactPtr &self, const Tp::TextChannelPtr &channel, QObject *parent)
     : AbstractConversationModel(parent),
       mPriv(new Private(self,channel))
 {
+    connect(mPriv->mChannel.data(),
+            SIGNAL(messageReceived(Tp::ReceivedMessage)),
+            SLOT(onMessageReceived(Tp::ReceivedMessage)));
     connect(mPriv->mChannel.data(),
             SIGNAL(chatStateChanged(Tp::ContactPtr,Tp::ChannelChatState)),
             SLOT(onChatStateChanged(Tp::ContactPtr,Tp::ChannelChatState)));
@@ -87,14 +94,18 @@ Tp::ContactPtr SessionConversationModel::selfContact() const
 
 void SessionConversationModel::onMessageReceived(const Tp::ReceivedMessage &message)
 {
-    // TODO: For the moment skip if the message is a delivery report
-    // Later they could be used to report status on sent messages
-    if (message.messageType() != Tp::ChannelTextMessageTypeDeliveryReport) {
-        TextEventItem *item = new TextEventItem(message.sender(), mPriv->mSelf,
-            message.sent(), message.text(), message.messageType(), this);
-        addItem(item);
+    if (mPriv->mChannelQueueConnected) {
+        // TODO: For the moment skip if the message is a delivery report
+        // Later they could be used to report status on sent messages
+        if (message.messageType() != Tp::ChannelTextMessageTypeDeliveryReport) {
+            TextEventItem *item = new TextEventItem(message.sender(), mPriv->mSelf,
+                message.sent(), message.text(), message.messageType(), this);
+            addItem(item);
+        }
+        mPriv->mChannel->acknowledge(QList<Tp::ReceivedMessage>() << message);
+    } else {
+        emit numPendingMessagesChanged();
     }
-    mPriv->mChannel->acknowledge(QList<Tp::ReceivedMessage>() << message);
 }
 
 void SessionConversationModel::onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state)
@@ -118,8 +129,7 @@ void SessionConversationModel::onChatStateChanged(const Tp::ContactPtr &contact,
   */
 void SessionConversationModel::disconnectChannelQueue()
 {
-    disconnect(mPriv->mChannel.data(), SIGNAL(messageReceived(Tp::ReceivedMessage)),
-               this, SLOT(onMessageReceived(Tp::ReceivedMessage)));
+    mPriv->mChannelQueueConnected = false;
 }
 
 /**
@@ -127,16 +137,34 @@ void SessionConversationModel::disconnectChannelQueue()
   */
 void SessionConversationModel::connectChannelQueue()
 {
-    // reconnect the signal
-    connect(mPriv->mChannel.data(),
-                SIGNAL(messageReceived(Tp::ReceivedMessage)),
-                SLOT(onMessageReceived(Tp::ReceivedMessage)));
+    mPriv->mChannelQueueConnected = true;
 
     // flush the queue and enter all messages into the model
     // display messages already in queue
+    bool messagesReceived = false;
     foreach (Tp::ReceivedMessage message, mPriv->mChannel->messageQueue()) {
         onMessageReceived(message);
+        messagesReceived = true;
     }
+
+    if (messagesReceived) {
+        qDebug() << "emiting numPendingMessagesChanged";
+        emit numPendingMessagesChanged();
+    }
+}
+
+Q_INVOKABLE bool SessionConversationModel::channelQueueConnected() const
+{
+    return mPriv->mChannelQueueConnected;
+}
+
+int SessionConversationModel::numPendingMessages() const
+{
+    if (!mPriv->mChannelQueueConnected && !mPriv->mChannel.isNull()) {
+        return mPriv->mChannel->messageQueue().count();
+    }
+
+    return 0;
 }
 
 }
