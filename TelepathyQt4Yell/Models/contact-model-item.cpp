@@ -69,6 +69,9 @@ ContactModelItem::ContactModelItem(const Tp::ContactPtr &contact)
             SIGNAL(capabilitiesChanged(Tp::ContactCapabilities)),
             SLOT(onChanged()));
     connect(contact.data(),
+            SIGNAL(capabilitiesChanged(Tp::ContactCapabilities)),
+            SLOT(onCapabilitiesChanged()));
+    connect(contact.data(),
             SIGNAL(locationUpdated(Tp::LocationInfo)),
             SLOT(onChanged()));
     connect(contact.data(),
@@ -195,6 +198,11 @@ void ContactModelItem::onChanged()
 Tp::ContactPtr ContactModelItem::contact() const
 {
     return mPriv->mContact;
+}
+
+void ContactModelItem::onCapabilitiesChanged()
+{
+    mPriv->mCallContactCaps.updateRequestableChannelClasses(mPriv->mContact->capabilities().allClassSpecs().bareClasses());
 }
 
 }
