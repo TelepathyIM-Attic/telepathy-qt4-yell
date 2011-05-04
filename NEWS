@@ -5,6 +5,7 @@ The "..." release.
 
 Enhancements:
  * Implement removeRows method in AbstractConversationModel
+ * Keep count of unread/missed messages in SessionConversationModel
  * ...
 
 Fixes:
