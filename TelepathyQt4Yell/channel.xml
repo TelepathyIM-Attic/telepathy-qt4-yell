@@ -12,6 +12,7 @@
 <xi:include href="../spec/Call_Stream.xml"/>
 <xi:include href="../spec/Call_Stream_Endpoint.xml"/>
 <xi:include href="../spec/Call_Stream_Interface_Media.xml"/>
+<xi:include href="../spec/Channel_Interface_Credentials_Storage.xml"/>
 
 <xi:include href="../spec/generic-types.xml"/>
 <xi:include href="../spec/errors.xml"/>
