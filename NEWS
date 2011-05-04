@@ -4,6 +4,7 @@ telepathy-qt4-yell 0.1.4 (UNRELEASED)
 The "..." release.
 
 Enhancements:
+ * Implement removeRows method in AbstractConversationModel
  * ...
 
 Fixes:
