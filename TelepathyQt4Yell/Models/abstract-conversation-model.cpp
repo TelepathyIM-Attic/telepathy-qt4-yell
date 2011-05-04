@@ -245,10 +245,23 @@ void AbstractConversationModel::insertItems(QList<const EventItem *> items, int 
     beginInsertRows(QModelIndex(), index, index + items.count() - 1);
     const Tpy::EventItem *item;
     int i = 0;
-    foreach(item, items) {
+    foreach (item, items) {
         mPriv->mItems.insert(index + i++, item);
     }
     endInsertRows();
+}
+
+bool AbstractConversationModel::removeRows(int row, int count, const QModelIndex &parent)
+{
+    if (row >= 0 && count > 0 && (row + count) <= mPriv->mItems.count()) {
+        beginRemoveRows(parent, row, row + count - 1);
+        while (count-- > 0) {
+            mPriv->mItems.removeAt(row);
+        }
+        endRemoveRows();
+        return true;
+    }
+    return false;
 }
 
 }

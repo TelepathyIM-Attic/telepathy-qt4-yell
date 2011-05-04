@@ -70,6 +70,8 @@ public:
     virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role) const;
 
+    virtual bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
+
     void addItem(const EventItem *item);
     void insertItems(QList<const EventItem *> items, int index = 0);
     bool deleteItem(const EventItem *item);
