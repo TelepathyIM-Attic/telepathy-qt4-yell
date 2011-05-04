@@ -1,17 +1,15 @@
-telepathy-qt4-yell 0.1.4 (UNRELEASED)
+telepathy-qt4-yell 0.1.4 (2011-05-04)
 ======================================
 
-The "..." release.
+The "Aruba, one happy island" release.
 
 Enhancements:
  * Implement removeRows method in AbstractConversationModel
  * Keep count of unread/missed messages in SessionConversationModel
  * Added auto-generate classes for Channel.Interface.CredentialsStorage
- * ...
 
 Fixes:
  * Fix media call caps update when changed
- * ...
 
 telepathy-qt4-yell 0.1.3 (2011-04-22)
 ======================================
