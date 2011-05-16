@@ -127,8 +127,8 @@ void PendingTfChannel::Private::onTfChannelNewFinish(GObject *sourceObject,
                 G_ASYNC_INITABLE(sourceObject), res, &error));
     if (error) {
         qDebug() << "PendingTfChannel::Private::onTfChannelNewFinish: error " << error->message;
-        g_clear_error(&error);
         self->setFinishedWithError(TP_QT4_ERROR_NOT_AVAILABLE, QLatin1String(error->message));
+        g_clear_error(&error);
         return;
     }
 
