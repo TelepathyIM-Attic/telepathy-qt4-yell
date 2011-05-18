@@ -7,7 +7,7 @@ Enhancements:
  * ...
 
 Fixes:
- * ...
+ * Fix crash when g_async_initable_new_finish returned error
 
 telepathy-qt4-yell 0.1.4 (2011-05-04)
 ======================================
