@@ -43,6 +43,7 @@ struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT AccountsModelItem::Private
     void setStatusMessage(const QString &value);
 
     Tp::AccountPtr mAccount;
+    Tp::ContactManagerPtr mManager;
 };
 
 void AccountsModelItem::Private::setStatus(const QString &value)
@@ -186,6 +187,13 @@ QVariant AccountsModelItem::data(int role) const
             return mPriv->mAccount->connectionStatus();
         case AccountsModel::ConnectionStatusReasonRole:
             return mPriv->mAccount->connectionStatusReason();
+        case AccountsModel::ContactListStateRole: {
+            if (!mPriv->mManager.isNull()) {
+                return mPriv->mManager->state();
+            } else {
+                return Tp::ContactListStateNone;
+            }
+        }
         default:
             return QVariant();
     }
@@ -306,22 +314,23 @@ void AccountsModelItem::onConnectionChanged(const Tp::ConnectionPtr &connection)
         return;
     }
 
-    Tp::ContactManagerPtr manager = connection->contactManager();
+    mPriv->mManager = connection->contactManager();
 
-    connect(manager.data(),
+    connect(mPriv->mManager.data(),
             SIGNAL(allKnownContactsChanged(Tp::Contacts,Tp::Contacts,
                                            Tp::Channel::GroupMemberChangeDetails)),
             SLOT(onContactsChanged(Tp::Contacts,Tp::Contacts)));
 
-    connect(manager.data(),
+    connect(mPriv->mManager.data(),
             SIGNAL(stateChanged(Tp::ContactListState)),
             SLOT(onContactManagerStateChanged(Tp::ContactListState)));
 
-    onContactManagerStateChanged(manager->state());
+    onContactManagerStateChanged(mPriv->mManager->state());
 }
 
 void AccountsModelItem::onContactManagerStateChanged(Tp::ContactListState state)
 {
+    onChanged();
     if (state == Tp::ContactListStateSuccess) {
         clearContacts();
         addKnownContacts();
