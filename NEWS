@@ -4,7 +4,7 @@ telepathy-qt4-yell 0.1.5 (UNRELEASED)
 The "..." release.
 
 Enhancements:
- * ...
+ * Added role to AccountsModel to get the state of the contact list
 
 Fixes:
  * Fix crash when g_async_initable_new_finish returned error
