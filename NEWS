@@ -1,7 +1,7 @@
-telepathy-qt4-yell 0.1.5 (UNRELEASED)
+telepathy-qt4-yell 0.1.5 (2011-05-26)
 ======================================
 
-The "..." release.
+The "shhh, contacts are coming in..." release.
 
 Enhancements:
  * Added role to AccountsModel to get the state of the contact list
