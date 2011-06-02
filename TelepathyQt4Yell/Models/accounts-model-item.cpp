@@ -123,11 +123,16 @@ AccountsModelItem::AccountsModelItem(const Tp::AccountPtr &account)
             SIGNAL(onlinenessChanged(bool)),
             SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
-            SIGNAL(connectionStatusChanged(Tp::ConnectionStatus)),
-            SLOT(onStatusChanged(Tp::ConnectionStatus)));
-    connect(mPriv->mAccount.data(),
             SIGNAL(connectionChanged(Tp::ConnectionPtr)),
             SLOT(onConnectionChanged(Tp::ConnectionPtr)));
+
+    // if connection is valid, connect to the status
+    if (!mPriv->mAccount->connection().isNull()
+            && mPriv->mAccount->connection()->isValid()) {
+        connect(mPriv->mAccount->connection().data(), SIGNAL(statusChanged(Tp::ConnectionStatus)),
+                SLOT(onStatusChanged(Tp::ConnectionStatus)));
+        onStatusChanged(mPriv->mAccount->connection()->status());
+    }
 }
 
 AccountsModelItem::~AccountsModelItem()
@@ -296,14 +301,11 @@ void AccountsModelItem::onContactsChanged(const Tp::Contacts &addedContacts,
 void AccountsModelItem::onStatusChanged(Tp::ConnectionStatus status)
 {
     onChanged();
-
     emit connectionStatusChanged(mPriv->mAccount->uniqueIdentifier(), status);
 }
 
 void AccountsModelItem::onConnectionChanged(const Tp::ConnectionPtr &connection)
 {
-    onChanged();
-
     // if the connection is invalid or disconnected, clear the contacts list
     if (connection.isNull()
             || !connection->isValid()
@@ -314,17 +316,18 @@ void AccountsModelItem::onConnectionChanged(const Tp::ConnectionPtr &connection)
         return;
     }
 
-    mPriv->mManager = connection->contactManager();
+    connect(connection.data(), SIGNAL(statusChanged(Tp::ConnectionStatus)),
+            SLOT(onStatusChanged(Tp::ConnectionStatus)));
+    onStatusChanged(connection->status());
 
+    mPriv->mManager = connection->contactManager();
     connect(mPriv->mManager.data(),
             SIGNAL(allKnownContactsChanged(Tp::Contacts,Tp::Contacts,
                                            Tp::Channel::GroupMemberChangeDetails)),
             SLOT(onContactsChanged(Tp::Contacts,Tp::Contacts)));
-
     connect(mPriv->mManager.data(),
             SIGNAL(stateChanged(Tp::ContactListState)),
             SLOT(onContactManagerStateChanged(Tp::ContactListState)));
-
     onContactManagerStateChanged(mPriv->mManager->state());
 }
 
