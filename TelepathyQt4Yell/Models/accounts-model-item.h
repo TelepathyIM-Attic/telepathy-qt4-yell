@@ -58,6 +58,7 @@ public:
 
 public Q_SLOTS:
     void addKnownContacts();
+    void onConnectionChanged(const Tp::ConnectionPtr &connection);
 
 Q_SIGNALS:
     void connectionStatusChanged(const QString &accountId, int status);
@@ -69,7 +70,6 @@ private Q_SLOTS:
 
     void onStatusChanged(Tp::ConnectionStatus status);
 
-    void onConnectionChanged(const Tp::ConnectionPtr &connection);
     void onContactManagerStateChanged(Tp::ContactListState state);
     void onContactsChanged(const Tp::Contacts &added,
                            const Tp::Contacts &removed);

@@ -63,11 +63,6 @@ void AccountsModelItem::Private::setStatusMessage(const QString &value)
 AccountsModelItem::AccountsModelItem(const Tp::AccountPtr &account)
     : mPriv(new Private(account))
 {
-    if (!mPriv->mAccount->connection().isNull()) {
-        // call the connection changed slot so that signals get connected
-        onConnectionChanged(mPriv->mAccount->connection());
-    }
-
     connect(mPriv->mAccount.data(),
             SIGNAL(removed()),
             SLOT(onRemoved()));
@@ -125,14 +120,6 @@ AccountsModelItem::AccountsModelItem(const Tp::AccountPtr &account)
     connect(mPriv->mAccount.data(),
             SIGNAL(connectionChanged(Tp::ConnectionPtr)),
             SLOT(onConnectionChanged(Tp::ConnectionPtr)));
-
-    // if connection is valid, connect to the status
-    if (!mPriv->mAccount->connection().isNull()
-            && mPriv->mAccount->connection()->isValid()) {
-        connect(mPriv->mAccount->connection().data(), SIGNAL(statusChanged(Tp::ConnectionStatus)),
-                SLOT(onStatusChanged(Tp::ConnectionStatus)));
-        onStatusChanged(mPriv->mAccount->connection()->status());
-    }
 }
 
 AccountsModelItem::~AccountsModelItem()
@@ -361,6 +348,8 @@ void AccountsModelItem::clearContacts()
                 emit childrenRemoved(this, i, i);
             }
         }
+    } else {
+        emit childrenRemoved(this, 0, size() - 1);
     }
 }
 
