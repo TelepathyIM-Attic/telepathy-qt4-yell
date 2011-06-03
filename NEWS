@@ -7,7 +7,7 @@ Enhancements:
  * ...
 
 Fixes:
- * ...
+ * Make the account model item use the status of the Connection object instead of the account one
 
 telepathy-qt4-yell 0.1.5 (2011-05-26)
 ======================================
