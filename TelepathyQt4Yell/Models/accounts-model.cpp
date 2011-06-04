@@ -64,17 +64,14 @@ AccountsModel::AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent)
     connect(mPriv->mTree,
             SIGNAL(childrenRemoved(TreeNode*,int,int)),
             SLOT(onItemsRemoved(TreeNode*,int,int)));
-
-    foreach (Tp::AccountPtr account, mPriv->mAM->allAccounts()) {
-        AccountsModelItem *item = new AccountsModelItem(account);
-        connect(item, SIGNAL(connectionStatusChanged(QString,int)),
-                this, SIGNAL(accountConnectionStatusChanged(QString,int)));
-        mPriv->mTree->addChild(item);
-    }
-
     connect(mPriv->mAM.data(),
             SIGNAL(newAccount(Tp::AccountPtr)),
             SLOT(onNewAccount(Tp::AccountPtr)));
+
+    // load existing accounts
+    foreach (Tp::AccountPtr account, mPriv->mAM->allAccounts()) {
+        onNewAccount(account);
+    }
 
     QHash<int, QByteArray> roles;
     roles[ItemRole] = "item";
@@ -132,12 +129,18 @@ AccountsModel::~AccountsModel()
 
 void AccountsModel::onNewAccount(const Tp::AccountPtr &account)
 {
-    AccountsModelItem *accountNode = new AccountsModelItem(account);
-
-    connect(accountNode, SIGNAL(connectionStatusChanged(QString,int)),
+    AccountsModelItem *item = new AccountsModelItem(account);
+    connect(item, SIGNAL(connectionStatusChanged(QString,int)),
             this, SIGNAL(accountConnectionStatusChanged(QString,int)));
+    onItemsAdded(mPriv->mTree, QList<TreeNode *>() << item);
 
-    onItemsAdded(mPriv->mTree, QList<TreeNode *>() << accountNode);
+    // this is done here because the item needs to be added to the tree so that the necessary signals
+    // are in place to detect when adding contacts to the account item
+    // otherwise, addKnownContacts will be called, but the contacts will not be added to the model
+    if (!account->connection().isNull()
+            && account->connection()->isValid()) {
+        item->onConnectionChanged(account->connection());
+    }
 }
 
 void AccountsModel::onItemChanged(TreeNode *node)
