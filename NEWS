@@ -1,10 +1,7 @@
-telepathy-qt4-yell 0.1.6 (UNRELEASED)
+telepathy-qt4-yell 0.1.6 (2011-06-06)
 ======================================
 
-The "..." release
-
-Enhancements:
- * ...
+The "don't call on your model contacts unless necessary" release
 
 Fixes:
  * Make the account model item use the status of the Connection object instead of the account one
