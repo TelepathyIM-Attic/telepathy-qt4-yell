@@ -175,8 +175,14 @@ QVariant AccountsModelItem::data(int role) const
             return mPriv->mAccount->requestedPresence().type();
         case AccountsModel::RequestedPresenceStatusMessageRole:
             return mPriv->mAccount->requestedPresence().statusMessage();
-        case AccountsModel::ConnectionStatusRole:
-            return mPriv->mAccount->connectionStatus();
+        case AccountsModel::ConnectionStatusRole: {
+            if (!mPriv->mAccount->connection().isNull()
+                    && mPriv->mAccount->connection()->isValid()) {
+                return mPriv->mAccount->connection()->status();
+            } else {
+                return Tp::ConnectionStatusDisconnected;
+            }
+        }
         case AccountsModel::ConnectionStatusReasonRole:
             return mPriv->mAccount->connectionStatusReason();
         case AccountsModel::ContactListStateRole: {
