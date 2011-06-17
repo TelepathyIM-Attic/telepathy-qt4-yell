@@ -183,8 +183,13 @@ QVariant AccountsModelItem::data(int role) const
                 return Tp::ConnectionStatusDisconnected;
             }
         }
-        case AccountsModel::ConnectionStatusReasonRole:
-            return mPriv->mAccount->connectionStatusReason();
+        case AccountsModel::ConnectionStatusReasonRole: {
+            if (!mPriv->mAccount->connection().isNull()) {
+                return mPriv->mAccount->connection()->statusReason();
+            } else {
+                return mPriv->mAccount->connectionStatusReason();
+            }
+        }
         case AccountsModel::ContactListStateRole: {
             if (!mPriv->mManager.isNull()) {
                 return mPriv->mManager->state();
@@ -311,6 +316,8 @@ void AccountsModelItem::onConnectionChanged(const Tp::ConnectionPtr &connection)
 
     connect(connection.data(), SIGNAL(statusChanged(Tp::ConnectionStatus)),
             SLOT(onStatusChanged(Tp::ConnectionStatus)));
+    connect(connection.data(), SIGNAL(invalidated(Tp::DBusProxy*,QString,QString)),
+            SLOT(onConnectionInvalidated()));
     onStatusChanged(connection->status());
 
     mPriv->mManager = connection->contactManager();
@@ -322,6 +329,11 @@ void AccountsModelItem::onConnectionChanged(const Tp::ConnectionPtr &connection)
             SIGNAL(stateChanged(Tp::ContactListState)),
             SLOT(onContactManagerStateChanged(Tp::ContactListState)));
     onContactManagerStateChanged(mPriv->mManager->state());
+}
+
+void AccountsModelItem::onConnectionInvalidated()
+{
+    onStatusChanged(Tp::ConnectionStatusDisconnected);
 }
 
 void AccountsModelItem::onContactManagerStateChanged(Tp::ContactListState state)

@@ -59,6 +59,7 @@ public:
 public Q_SLOTS:
     void addKnownContacts();
     void onConnectionChanged(const Tp::ConnectionPtr &connection);
+    void onConnectionInvalidated();
 
 Q_SIGNALS:
     void connectionStatusChanged(const QString &accountId, int status);
