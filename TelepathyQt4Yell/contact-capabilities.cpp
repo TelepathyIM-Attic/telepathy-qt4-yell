@@ -76,6 +76,17 @@ ContactCapabilities::ContactCapabilities(const Tp::RequestableChannelClassSpecLi
 }
 
 /**
+ * Construct a new ContactCapabilities object using the other \a rccSpecs.
+ *
+ * \param rccSpecs RequestableChannelClassList representing the capabilities of a
+ *                 contact.
+ */
+ContactCapabilities::ContactCapabilities(const Tp::ContactCapabilities &other)
+    : Tp::ContactCapabilities(other.allClassSpecs(), other.isSpecificToContact())
+{
+}
+
+/**
  * Class destructor.
  */
 ContactCapabilities::~ContactCapabilities()

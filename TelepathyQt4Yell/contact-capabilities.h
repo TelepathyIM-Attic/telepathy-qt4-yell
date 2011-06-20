@@ -37,6 +37,7 @@ class TELEPATHY_QT4_YELL_EXPORT ContactCapabilities : public Tp::ContactCapabili
 {
 public:
     ContactCapabilities();
+    ContactCapabilities(const Tp::ContactCapabilities &other);
     virtual ~ContactCapabilities();
 
     bool mediaCalls() const;

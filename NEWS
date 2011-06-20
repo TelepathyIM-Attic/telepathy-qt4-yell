@@ -6,7 +6,7 @@ Enhancements:
 Fixes:
  * Report the connection status reason using the Connection object if possible
  * On connection invalidated, emit the connection status changed signal to make sure the account model item is updated
-
+ * Add constructor to Tpy::ContactCapabilities so it can be really used
 
 telepathy-qt4-yell 0.1.6 (2011-06-06)
 ======================================
