@@ -105,13 +105,13 @@ QVariant ContactModelItem::data(int role) const
             return mPriv->mContact->id();
         case Qt::DisplayRole:
         case AccountsModel::AliasRole:
-            return mPriv->mContact->alias().toUtf8();
+            return mPriv->mContact->alias();
         case AccountsModel::PresenceStatusRole:
             return mPriv->mContact->presence().status();
         case AccountsModel::PresenceTypeRole:
             return mPriv->mContact->presence().type();
         case AccountsModel::PresenceMessageRole:
-            return mPriv->mContact->presence().statusMessage().toUtf8();
+            return mPriv->mContact->presence().statusMessage();
         case AccountsModel::SubscriptionStateRole:
             return mPriv->mContact->subscriptionState();
         case AccountsModel::PublishStateRole:
