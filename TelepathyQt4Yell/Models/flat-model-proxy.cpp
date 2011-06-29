@@ -168,15 +168,7 @@ void FlatModelProxy::onRowsRemoved(const QModelIndex &index, int first, int last
 
 void FlatModelProxy::onDataChanged(const QModelIndex &first, const QModelIndex &last)
 {
-    if (!first.parent().isValid()) {
-        int firstOffset = mPriv->offsetOf(this, first.row());
-        int lastOffset = mPriv->offsetOf(this, last.row() + 1) - 1;
-
-        QModelIndex firstIndex = createIndex(firstOffset, 0, first.row());
-        QModelIndex lastIndex = createIndex(lastOffset, 0, last.row());
-        emit dataChanged(firstIndex, lastIndex);
-    }
-    else if (first.parent() == last.parent()) {
+    if (first.parent().isValid() && last.parent().isValid() && first.parent() == last.parent()) {
         QModelIndex firstIndex = mapFromSource(first);
         QModelIndex lastIndex = mapFromSource(last);
         emit dataChanged(firstIndex, lastIndex);
