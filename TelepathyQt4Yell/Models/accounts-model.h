@@ -122,12 +122,15 @@ public:
 Q_SIGNALS:
     void accountCountChanged();
     void accountConnectionStatusChanged(const QString &accountId, int status);
+    // expensive operation, updates all children from parents first .. last
+    void hierarchicalDataChanged(const QModelIndex &first, const QModelIndex &last);
 
 protected Q_SLOTS:
+    void onLoadAccounts();
     void onNewAccount(const Tp::AccountPtr &account);
-    void onItemChanged(TreeNode *node);
-    void onItemsAdded(TreeNode *parent, const QList<TreeNode *> &nodes);
-    void onItemsRemoved(TreeNode *parent, int first, int last);
+    void onItemChanged(Tpy::TreeNode *node);
+    virtual void onItemsAdded(Tpy::TreeNode *parent, const QList<Tpy::TreeNode *> &nodes);
+    void onItemsRemoved(Tpy::TreeNode *parent, int first, int last);
 
 private:
     struct Private;
