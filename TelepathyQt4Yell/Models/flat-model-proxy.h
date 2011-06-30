@@ -60,6 +60,7 @@ private Q_SLOTS:
     void onRowsAboutToBeRemoved(const QModelIndex &index, int first, int last);
     void onRowsRemoved(const QModelIndex &index, int first, int last);
     void onDataChanged(const QModelIndex &first, const QModelIndex &last);
+    void onHierarchicalDataChanged(const QModelIndex &fisrt, const QModelIndex &last);
 
 private:
     struct Private;
