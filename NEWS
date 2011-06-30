@@ -8,9 +8,8 @@ Fixes:
  * On connection invalidated, emit the connection status changed signal to make sure the account model item is updated
  * Add constructor to Tpy::ContactCapabilities so it can be really used
  * Revert returning UTF-8 for the contact alias and status messages strings
- * Optimization of flat model proxy, dataChanged signal not hierarchical
+ * WARNING: optimization of flat model proxy, dataChanged signal is not hierarchical anymore after we found out it was quite expensive. You need to do explicit hierarchical changes.
  * Added hierarchicalDataChanged signal to Tpy::AccountsModel for explicit signalling of changes in account data affecting contacts data (expensive)
-
 
 telepathy-qt4-yell 0.1.6 (2011-06-06)
 ======================================
