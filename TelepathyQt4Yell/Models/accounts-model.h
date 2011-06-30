@@ -124,6 +124,7 @@ Q_SIGNALS:
     void accountConnectionStatusChanged(const QString &accountId, int status);
     // expensive operation, updates all children from parents first .. last
     void hierarchicalDataChanged(const QModelIndex &first, const QModelIndex &last);
+    void newAccountItem(const QString &accountId);
 
 protected Q_SLOTS:
     void onLoadAccounts();

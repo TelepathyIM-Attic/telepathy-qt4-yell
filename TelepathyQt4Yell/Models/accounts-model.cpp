@@ -146,6 +146,7 @@ void AccountsModel::onNewAccount(const Tp::AccountPtr &account)
             && account->connection()->isValid()) {
         item->onConnectionChanged(account->connection());
     }
+    emit newAccountItem(account->uniqueIdentifier());
 }
 
 void AccountsModel::onItemChanged(TreeNode *node)
