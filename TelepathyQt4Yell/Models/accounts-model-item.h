@@ -27,6 +27,7 @@
 
 #include <TelepathyQt4Yell/Models/TreeNode>
 
+#include <TelepathyQt4/ConnectionCapabilities>
 #include <TelepathyQt4/Constants>
 #include <TelepathyQt4/Contact>
 #include <TelepathyQt4/Types>
@@ -62,6 +63,24 @@ public Q_SLOTS:
     void onConnectionInvalidated();
 
 Q_SIGNALS:
+    void serviceNameChanged(const QString &serviceName);
+    void profileChanged(const Tp::ProfilePtr &profile);
+    void displayNameChanged(const QString &displayName);
+    void iconNameChanged(const QString &iconName);
+    void nicknameChanged(const QString &nickname);
+    void normalizedNameChanged(const QString &normalizedName);
+    void validityChanged(bool validity);
+    void stateChanged(bool state);
+    void capabilitiesChanged(const Tp::ConnectionCapabilities &capabilities);
+    void connectsAutomaticallyPropertyChanged(bool connectsAutomatically);
+    void firstOnline();
+    void parametersChanged(const QVariantMap &parameters);
+    void changingPresence(bool value);
+    void automaticPresenceChanged(const Tp::Presence &automaticPresence);
+    void currentPresenceChanged(const Tp::Presence &currentPresence);
+    void requestedPresenceChanged(const Tp::Presence &requestedPresence);
+    void onlinenessChanged(bool online);
+    void avatarChanged(const Tp::Avatar &avatar);
     void connectionStatusChanged(const QString &accountId, int status);
 
 private Q_SLOTS:

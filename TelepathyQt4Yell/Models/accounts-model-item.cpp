@@ -70,53 +70,110 @@ AccountsModelItem::AccountsModelItem(const Tp::AccountPtr &account)
             SIGNAL(serviceNameChanged(QString)),
             SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
+            SIGNAL(serviceNameChanged(QString)),
+            SIGNAL(serviceNameChanged(QString)));
+    connect(mPriv->mAccount.data(),
             SIGNAL(profileChanged(Tp::ProfilePtr)),
             SLOT(onChanged()));
+    connect(mPriv->mAccount.data(),
+            SIGNAL(profileChanged(Tp::ProfilePtr)),
+            SIGNAL(profileChanged(Tp::ProfilePtr)));
+    connect(mPriv->mAccount.data(),
+            SIGNAL(displayNameChanged(QString)),
+            SLOT(onChanged()));
+    connect(mPriv->mAccount.data(),
+            SIGNAL(displayNameChanged(QString)),
+            SIGNAL(displayNameChanged(QString)));
     connect(mPriv->mAccount.data(),
             SIGNAL(iconNameChanged(QString)),
             SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
+            SIGNAL(iconNameChanged(QString)),
+            SIGNAL(iconNameChanged(QString)));
+    connect(mPriv->mAccount.data(),
             SIGNAL(nicknameChanged(QString)),
             SLOT(onChanged()));
+    connect(mPriv->mAccount.data(),
+            SIGNAL(nicknameChanged(QString)),
+            SIGNAL(nicknameChanged(QString)));
     connect(mPriv->mAccount.data(),
             SIGNAL(normalizedNameChanged(QString)),
             SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
+            SIGNAL(normalizedNameChanged(QString)),
+            SIGNAL(normalizedNameChanged(QString)));
+    connect(mPriv->mAccount.data(),
             SIGNAL(validityChanged(bool)),
             SLOT(onChanged()));
+    connect(mPriv->mAccount.data(),
+            SIGNAL(validityChanged(bool)),
+            SIGNAL(validityChanged(bool)));
     connect(mPriv->mAccount.data(),
             SIGNAL(stateChanged(bool)),
             SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
+            SIGNAL(stateChanged(bool)),
+            SIGNAL(stateChanged(bool)));
+    connect(mPriv->mAccount.data(),
             SIGNAL(capabilitiesChanged(Tp::ConnectionCapabilities)),
             SLOT(onChanged()));
+    connect(mPriv->mAccount.data(),
+            SIGNAL(capabilitiesChanged(Tp::ConnectionCapabilities)),
+            SIGNAL(capabilitiesChanged(Tp::ConnectionCapabilities)));
     connect(mPriv->mAccount.data(),
             SIGNAL(connectsAutomaticallyPropertyChanged(bool)),
             SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
+            SIGNAL(connectsAutomaticallyPropertyChanged(bool)),
+            SIGNAL(connectsAutomaticallyPropertyChanged(bool)));
+    connect(mPriv->mAccount.data(),
             SIGNAL(parametersChanged(QVariantMap)),
             SLOT(onChanged()));
+    connect(mPriv->mAccount.data(),
+            SIGNAL(parametersChanged(QVariantMap)),
+            SIGNAL(parametersChanged(QVariantMap)));
     connect(mPriv->mAccount.data(),
             SIGNAL(changingPresence(bool)),
             SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
+            SIGNAL(changingPresence(bool)),
+            SIGNAL(changingPresence(bool)));
+    connect(mPriv->mAccount.data(),
             SIGNAL(automaticPresenceChanged(Tp::Presence)),
             SLOT(onChanged()));
+    connect(mPriv->mAccount.data(),
+            SIGNAL(automaticPresenceChanged(Tp::Presence)),
+            SIGNAL(automaticPresenceChanged(Tp::Presence)));
     connect(mPriv->mAccount.data(),
             SIGNAL(currentPresenceChanged(Tp::Presence)),
             SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
+            SIGNAL(currentPresenceChanged(Tp::Presence)),
+            SIGNAL(currentPresenceChanged(Tp::Presence)));
+    connect(mPriv->mAccount.data(),
             SIGNAL(requestedPresenceChanged(Tp::Presence)),
             SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
+            SIGNAL(requestedPresenceChanged(Tp::Presence)),
+            SIGNAL(requestedPresenceChanged(Tp::Presence)));
+    connect(mPriv->mAccount.data(),
             SIGNAL(onlinenessChanged(bool)),
             SLOT(onChanged()));
+    connect(mPriv->mAccount.data(),
+            SIGNAL(onlinenessChanged(bool)),
+            SIGNAL(onlinenessChanged(bool)));
     connect(mPriv->mAccount.data(),
             SIGNAL(avatarChanged(Tp::Avatar)),
             SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
+            SIGNAL(avatarChanged(Tp::Avatar)),
+            SIGNAL(avatarChanged(Tp::Avatar)));
+    connect(mPriv->mAccount.data(),
             SIGNAL(onlinenessChanged(bool)),
             SLOT(onChanged()));
+    connect(mPriv->mAccount.data(),
+            SIGNAL(onlinenessChanged(bool)),
+            SIGNAL(onlinenessChanged(bool)));
     connect(mPriv->mAccount.data(),
             SIGNAL(connectionChanged(Tp::ConnectionPtr)),
             SLOT(onConnectionChanged(Tp::ConnectionPtr)));
