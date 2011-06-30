@@ -58,9 +58,9 @@ public:
     virtual void remove();
 
 Q_SIGNALS:
-    void changed(TreeNode *);
-    void childrenAdded(TreeNode *parent, const QList<TreeNode *> &nodes);
-    void childrenRemoved(TreeNode *parent, int first, int last);
+    void changed(Tpy::TreeNode *);
+    void childrenAdded(Tpy::TreeNode *parent, const QList<Tpy::TreeNode *> &nodes);
+    void childrenRemoved(Tpy::TreeNode *parent, int first, int last);
 
 private:
     struct Private;

@@ -56,22 +56,17 @@ AccountsModel::AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent)
 {
     mPriv->mTree = new TreeNode;
     connect(mPriv->mTree,
-            SIGNAL(changed(TreeNode*)),
-            SLOT(onItemChanged(TreeNode*)));
+            SIGNAL(changed(Tpy::TreeNode*)),
+            SLOT(onItemChanged(Tpy::TreeNode*)));
     connect(mPriv->mTree,
-            SIGNAL(childrenAdded(TreeNode*,QList<TreeNode*>)),
-            SLOT(onItemsAdded(TreeNode*,QList<TreeNode*>)));
+            SIGNAL(childrenAdded(Tpy::TreeNode*,QList<Tpy::TreeNode*>)),
+            SLOT(onItemsAdded(Tpy::TreeNode*,QList<Tpy::TreeNode*>)));
     connect(mPriv->mTree,
-            SIGNAL(childrenRemoved(TreeNode*,int,int)),
-            SLOT(onItemsRemoved(TreeNode*,int,int)));
+            SIGNAL(childrenRemoved(Tpy::TreeNode*,int,int)),
+            SLOT(onItemsRemoved(Tpy::TreeNode*,int,int)));
     connect(mPriv->mAM.data(),
             SIGNAL(newAccount(Tp::AccountPtr)),
             SLOT(onNewAccount(Tp::AccountPtr)));
-
-    // load existing accounts
-    foreach (Tp::AccountPtr account, mPriv->mAM->allAccounts()) {
-        onNewAccount(account);
-    }
 
     QHash<int, QByteArray> roles;
     roles[ItemRole] = "item";
@@ -119,12 +114,22 @@ AccountsModel::AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent)
     roles[UpgradeCallCapabilityRole] = "upgradeCall";
     roles[FileTransferCapabilityRole] = "fileTransfer";
     setRoleNames(roles);
+
+    QTimer::singleShot(0, this, SLOT(onLoadAccounts()));
 }
 
 AccountsModel::~AccountsModel()
 {
     delete mPriv->mTree;
     delete mPriv;
+}
+
+void AccountsModel::onLoadAccounts()
+{
+    // load existing accounts
+    foreach (Tp::AccountPtr account, mPriv->mAM->allAccounts()) {
+        onNewAccount(account);
+    }
 }
 
 void AccountsModel::onNewAccount(const Tp::AccountPtr &account)
@@ -149,7 +154,7 @@ void AccountsModel::onItemChanged(TreeNode *node)
     emit dataChanged(accountIndex, accountIndex);
 }
 
-void AccountsModel::onItemsAdded(TreeNode *parent, const QList<TreeNode *> &nodes)
+void AccountsModel::onItemsAdded(Tpy::TreeNode *parent, const QList<Tpy::TreeNode *> &nodes)
 {
     QModelIndex parentIndex = index(parent);
     int currentSize = rowCount(parentIndex);

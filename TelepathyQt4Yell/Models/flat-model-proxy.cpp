@@ -21,6 +21,7 @@
 #include <TelepathyQt4Yell/Models/FlatModelProxy>
 
 #include "TelepathyQt4Yell/Models/_gen/flat-model-proxy.moc.hpp"
+#include <TelepathyQt4Yell/Models/AccountsModel>
 
 namespace Tpy
 {
@@ -66,6 +67,13 @@ FlatModelProxy::FlatModelProxy(QAbstractItemModel *source)
     connect(source,
             SIGNAL(dataChanged(QModelIndex,QModelIndex)),
             SLOT(onDataChanged(QModelIndex,QModelIndex)));
+
+    Tpy::AccountsModel *accountsModel = qobject_cast<Tpy::AccountsModel *> (source);
+    if (accountsModel) {
+        connect(accountsModel,
+                SIGNAL(hierarchicalDataChanged(QModelIndex,QModelIndex)),
+                SLOT(onHierarchicalDataChanged(QModelIndex,QModelIndex)));
+    }
 }
 
 FlatModelProxy::~FlatModelProxy()
@@ -168,18 +176,24 @@ void FlatModelProxy::onRowsRemoved(const QModelIndex &index, int first, int last
 
 void FlatModelProxy::onDataChanged(const QModelIndex &first, const QModelIndex &last)
 {
-    if (!first.parent().isValid()) {
-        int firstOffset = mPriv->offsetOf(this, first.row());
-        int lastOffset = mPriv->offsetOf(this, last.row() + 1) - 1;
-
-        QModelIndex firstIndex = createIndex(firstOffset, 0, first.row());
-        QModelIndex lastIndex = createIndex(lastOffset, 0, last.row());
-        emit dataChanged(firstIndex, lastIndex);
-    }
-    else if (first.parent() == last.parent()) {
+    if (first.parent().isValid() && last.parent().isValid() && first.parent() == last.parent()) {
         QModelIndex firstIndex = mapFromSource(first);
         QModelIndex lastIndex = mapFromSource(last);
         emit dataChanged(firstIndex, lastIndex);
+    }
+}
+
+void FlatModelProxy::onHierarchicalDataChanged(const QModelIndex &first, const QModelIndex &last)
+{
+    if (!first.parent().isValid() && !last.parent().isValid()) {
+        int firstOffset = mPriv->offsetOf(this, first.row());
+        int lastOffset = mPriv->offsetOf(this, last.row() + 1) - 1;
+        QModelIndex firstIndex = createIndex(firstOffset, 0, first.row());
+        QModelIndex lastIndex = createIndex(lastOffset, 0, last.row());
+        emit dataChanged(firstIndex, lastIndex);
+    } else {
+        // do not do normal dataChanged, since dataChanged it was already triggered separately
+        //onDataChanged(first, last);
     }
 }
 
