@@ -203,6 +203,7 @@ Tp::ContactPtr ContactModelItem::contact() const
 void ContactModelItem::onCapabilitiesChanged()
 {
     mPriv->mCallContactCaps.updateRequestableChannelClasses(mPriv->mContact->capabilities().allClassSpecs().bareClasses());
+    emit capabilitiesChanged();
 }
 
 }
