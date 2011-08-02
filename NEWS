@@ -3,6 +3,7 @@ telepathy-qt4-yell 0.1.x
 
 Enhancements:
  * Emit a signal when an account item is added to AccountsModel
+ * Emit a signal on contact item when the caps get updated
 
 Fixes:
  * Report the connection status reason using the Connection object if possible

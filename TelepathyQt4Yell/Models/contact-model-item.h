@@ -46,6 +46,9 @@ public:
 
     Tp::ContactPtr contact() const;
 
+Q_SIGNALS:
+    void capabilitiesChanged();
+
 public Q_SLOTS:
     void onChanged();
     void onCapabilitiesChanged();
