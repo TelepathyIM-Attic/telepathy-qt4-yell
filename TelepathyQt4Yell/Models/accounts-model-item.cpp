@@ -308,6 +308,16 @@ void AccountsModelItem::setRequestedPresence(int type, const QString &status, co
     mPriv->mAccount->setRequestedPresence(presence);
 }
 
+bool AccountsModelItem::isPresenceSupported(int type) const
+{
+    Tp::PresenceSpecList list = mPriv->mAccount->allowedPresenceStatuses();
+    Q_FOREACH (const Tp::PresenceSpec &p, list) {
+        if (p.presence().type() == type && p.maySetOnSelf())
+            return true;
+    }
+    return false;
+}
+
 void AccountsModelItem::onRemoved()
 {
     int index = parent()->indexOf(this);
