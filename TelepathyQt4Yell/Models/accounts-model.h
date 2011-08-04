@@ -29,6 +29,7 @@
 
 #include <TelepathyQt4/Account>
 #include <TelepathyQt4/AccountManager>
+#include <TelepathyQt4/AccountSet>
 #include <TelepathyQt4/TextChannel>
 #include <TelepathyQt4/Types>
 
@@ -99,6 +100,7 @@ public:
         CustomRole // a placemark for custom roles in inherited models
     };
 
+    explicit AccountsModel(const Tp::AccountSetPtr &accountSet, QObject *parent = 0);
     explicit AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent = 0);
     virtual ~AccountsModel();
 
@@ -132,6 +134,9 @@ protected Q_SLOTS:
     void onItemChanged(Tpy::TreeNode *node);
     virtual void onItemsAdded(Tpy::TreeNode *parent, const QList<Tpy::TreeNode *> &nodes);
     void onItemsRemoved(Tpy::TreeNode *parent, int first, int last);
+
+protected:
+    void initialize();
 
 private:
     struct Private;

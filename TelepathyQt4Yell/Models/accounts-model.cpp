@@ -34,13 +34,18 @@ namespace Tpy
 struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT AccountsModel::Private
 {
     Private(const Tp::AccountManagerPtr &am)
-        : mAM(am)
+    {
+        mAccountSet = am->validAccounts();
+    }
+
+    Private(const Tp::AccountSetPtr &accountSet)
+        : mAccountSet(accountSet)
     {
     }
 
     TreeNode *node(const QModelIndex &index) const;
 
-    Tp::AccountManagerPtr mAM;
+    Tp::AccountSetPtr mAccountSet;
     TreeNode *mTree;
 };
 
@@ -50,9 +55,27 @@ TreeNode *AccountsModel::Private::node(const QModelIndex &index) const
     return node ? node : mTree;
 }
 
+AccountsModel::AccountsModel(const Tp::AccountSetPtr &accountSet, QObject *parent)
+    : QAbstractItemModel(parent),
+      mPriv(new AccountsModel::Private(accountSet))
+{
+    initialize();
+}
+
 AccountsModel::AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent)
     : QAbstractItemModel(parent),
       mPriv(new AccountsModel::Private(am))
+{
+    initialize();
+}
+
+AccountsModel::~AccountsModel()
+{
+    delete mPriv->mTree;
+    delete mPriv;
+}
+
+void AccountsModel::initialize()
 {
     mPriv->mTree = new TreeNode;
     connect(mPriv->mTree,
@@ -64,8 +87,8 @@ AccountsModel::AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent)
     connect(mPriv->mTree,
             SIGNAL(childrenRemoved(Tpy::TreeNode*,int,int)),
             SLOT(onItemsRemoved(Tpy::TreeNode*,int,int)));
-    connect(mPriv->mAM.data(),
-            SIGNAL(newAccount(Tp::AccountPtr)),
+    connect(mPriv->mAccountSet.data(),
+            SIGNAL(accountAdded(const Tp::AccountPtr)),
             SLOT(onNewAccount(Tp::AccountPtr)));
 
     QHash<int, QByteArray> roles;
@@ -118,16 +141,10 @@ AccountsModel::AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent)
     QTimer::singleShot(0, this, SLOT(onLoadAccounts()));
 }
 
-AccountsModel::~AccountsModel()
-{
-    delete mPriv->mTree;
-    delete mPriv;
-}
-
 void AccountsModel::onLoadAccounts()
 {
     // load existing accounts
-    foreach (Tp::AccountPtr account, mPriv->mAM->allAccounts()) {
+    foreach (Tp::AccountPtr account, mPriv->mAccountSet->accounts()) {
         onNewAccount(account);
     }
 }
