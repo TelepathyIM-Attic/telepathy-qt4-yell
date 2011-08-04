@@ -48,15 +48,15 @@ struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT AccountsModelItem::Private
 
 void AccountsModelItem::Private::setStatus(const QString &value)
 {
-    Tp::Presence presence = mAccount->currentPresence().barePresence();
-    presence.setStatus(Tp::ConnectionPresenceTypeUnset, value, QString());
+    Tp::Presence presence = mAccount->currentPresence();
+    presence.setStatus(presence.type(), value, presence.statusMessage());
     mAccount->setRequestedPresence(presence);
 }
 
 void AccountsModelItem::Private::setStatusMessage(const QString &value)
 {
-    Tp::Presence presence = mAccount->currentPresence().barePresence();
-    presence.setStatus(Tp::ConnectionPresenceTypeUnset, QString(), value);
+    Tp::Presence presence = mAccount->currentPresence();
+    presence.setStatus(presence.type(), presence.status(), value);
     mAccount->setRequestedPresence(presence);
 }
 

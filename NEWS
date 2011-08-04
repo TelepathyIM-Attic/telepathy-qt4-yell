@@ -12,6 +12,7 @@ Fixes:
  * Revert returning UTF-8 for the contact alias and status messages strings
  * WARNING: optimization of flat model proxy, dataChanged signal is not hierarchical anymore after we found out it was quite expensive. You need to do explicit hierarchical changes.
  * Added hierarchicalDataChanged signal to Tpy::AccountsModel for explicit signalling of changes in account data affecting contacts data (expensive)
+ * When setting status and statusMessage on Tpy::AccountsModelItem do not clear the presence type
 
 telepathy-qt4-yell 0.1.6 (2011-06-06)
 ======================================
