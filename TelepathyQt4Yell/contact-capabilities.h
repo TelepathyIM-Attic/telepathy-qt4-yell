@@ -45,6 +45,7 @@ public:
     bool videoCalls() const;
     bool videoCallsWithAudio() const;
     bool upgradingCalls() const;
+    bool fileTransfers() const;
 
 protected:
     friend class ContactModelItem;

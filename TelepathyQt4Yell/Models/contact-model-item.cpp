@@ -40,13 +40,13 @@ struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT ContactModelItem::Private
 {
     Private(const Tp::ContactPtr &contact)
         : mContact(contact),
-          mCallContactCaps(contact->capabilities().allClassSpecs(),
+          mContactCaps(contact->capabilities().allClassSpecs(),
               contact->capabilities().isSpecificToContact())
     {
     }
 
     Tp::ContactPtr mContact;
-    Tpy::ContactCapabilities mCallContactCaps;
+    Tpy::ContactCapabilities mContactCaps;
 };
 
 ContactModelItem::ContactModelItem(const Tp::ContactPtr &contact)
@@ -137,23 +137,17 @@ QVariant ContactModelItem::data(int role) const
         case AccountsModel::StreamedMediaUpgradeCallCapabilityRole:
             return mPriv->mContact->capabilities().upgradingStreamedMediaCalls();
         case AccountsModel::MediaCallCapabilityRole:
-            return mPriv->mCallContactCaps.mediaCalls();
+            return mPriv->mContactCaps.mediaCalls();
         case AccountsModel::AudioCallCapabilityRole:
-            return mPriv->mCallContactCaps.audioCalls();
+            return mPriv->mContactCaps.audioCalls();
         case AccountsModel::VideoCallCapabilityRole:
-            return mPriv->mCallContactCaps.videoCalls();
+            return mPriv->mContactCaps.videoCalls();
         case AccountsModel::VideoCallWithAudioCapabilityRole:
-            return mPriv->mCallContactCaps.videoCallsWithAudio();
+            return mPriv->mContactCaps.videoCallsWithAudio();
         case AccountsModel::UpgradeCallCapabilityRole:
-            return mPriv->mCallContactCaps.upgradingCalls();
-        case AccountsModel::FileTransferCapabilityRole: {
-            foreach (const Tp::RequestableChannelClassSpec &rccSpec, mPriv->mContact->capabilities().allClassSpecs()) {
-                if (rccSpec.supports(Tp::RequestableChannelClassSpec::fileTransfer())) {
-                    return true;
-                }
-            }
-            return false;
-        }
+            return mPriv->mContactCaps.upgradingCalls();
+        case AccountsModel::FileTransferCapabilityRole:
+            return mPriv->mContactCaps.fileTransfers();
         default:
             break;
     }
@@ -202,7 +196,7 @@ Tp::ContactPtr ContactModelItem::contact() const
 
 void ContactModelItem::onCapabilitiesChanged()
 {
-    mPriv->mCallContactCaps.updateRequestableChannelClasses(mPriv->mContact->capabilities().allClassSpecs().bareClasses());
+    mPriv->mContactCaps.updateRequestableChannelClasses(mPriv->mContact->capabilities().allClassSpecs().bareClasses());
     emit capabilitiesChanged();
 }
 

@@ -149,4 +149,14 @@ bool ContactCapabilities::upgradingCalls() const
     return false;
 }
 
+bool ContactCapabilities::fileTransfers() const
+{
+    foreach (const Tp::RequestableChannelClassSpec &rccSpec, allClassSpecs()) {
+        if (rccSpec.supports(Tp::RequestableChannelClassSpec::fileTransfer())) {
+            return true;
+        }
+    }
+    return false;
+}
+
 } // Tpy
