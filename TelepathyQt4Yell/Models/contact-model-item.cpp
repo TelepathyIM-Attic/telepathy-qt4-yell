@@ -165,14 +165,27 @@ bool ContactModelItem::setData(int role, const QVariant &value)
                 case Tp::Contact::PresenceStateYes:
                     // authorize the contact and request its presence publication
                     mPriv->mContact->authorizePresencePublication();
-                    mPriv->mContact->requestPresenceSubscription();
                     return true;
                 case Tp::Contact::PresenceStateNo: {
                     // reject the presence publication and remove the contact
                     mPriv->mContact->removePresencePublication();
-                    QList<Tp::ContactPtr> contacts;
-                    contacts << mPriv->mContact;
-                    mPriv->mContact->manager()->removeContacts(contacts);
+                    return true;
+                }
+                default:
+                    return false;
+            }
+        }
+        case AccountsModel::SubscriptionStateRole: {
+            Tp::Contact::PresenceState state;
+            state = (Tp::Contact::PresenceState) value.toInt();
+            switch (state) {
+                case Tp::Contact::PresenceStateAsk:
+                    // authorize the contact and request its presence publication
+                    mPriv->mContact->requestPresenceSubscription();
+                    return true;
+                case Tp::Contact::PresenceStateNo: {
+                    // reject the presence publication and remove the contact
+                    mPriv->mContact->removePresenceSubscription();
                     return true;
                 }
                 default:
@@ -198,6 +211,13 @@ void ContactModelItem::onCapabilitiesChanged()
 {
     mPriv->mContactCaps.updateRequestableChannelClasses(mPriv->mContact->capabilities().allClassSpecs().bareClasses());
     emit capabilitiesChanged();
+}
+
+void ContactModelItem::remove(const QString &message)
+{
+    QList<Tp::ContactPtr> contacts;
+    contacts << mPriv->mContact;
+    mPriv->mContact->manager()->removeContacts(contacts, message);
 }
 
 }

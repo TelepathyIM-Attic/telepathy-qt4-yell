@@ -8,6 +8,8 @@ Enhancements:
  * Add fileTransfers to Tpy::ContactCapabilities
  * Add Capabilities roles to AccountsModelItem
  * Add ServiceNameRole to AccountsModel
+ * Add method to remove contact in ContactModelItem
+ * Add method to request or remove subscription in ContactModelItem
 
 Fixes:
  * Report the connection status reason using the Connection object if possible
@@ -17,6 +19,8 @@ Fixes:
  * WARNING: optimization of flat model proxy, dataChanged signal is not hierarchical anymore after we found out it was quite expensive. You need to do explicit hierarchical changes.
  * Added hierarchicalDataChanged signal to Tpy::AccountsModel for explicit signalling of changes in account data affecting contacts data (expensive)
  * When setting status and statusMessage on Tpy::AccountsModelItem do not clear the presence type
+ * Do not remove contact when rejecting publication
+ * Do not request subscription automatically when accepting publication of a contact
 
 telepathy-qt4-yell 0.1.6 (2011-06-06)
 ======================================

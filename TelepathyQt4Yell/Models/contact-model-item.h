@@ -43,6 +43,7 @@ public:
 
     Q_INVOKABLE virtual QVariant data(int role) const;
     Q_INVOKABLE virtual bool setData(int role, const QVariant &value);
+    Q_INVOKABLE void remove(const QString &message = QString());
 
     Tp::ContactPtr contact() const;
 
