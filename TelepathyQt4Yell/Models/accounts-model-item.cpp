@@ -35,7 +35,8 @@ namespace Tpy
 struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT AccountsModelItem::Private
 {
     Private(const Tp::AccountPtr &account)
-        : mAccount(account)
+        : mAccount(account),
+          mAccountCaps(mAccount->capabilities().allClassSpecs())
     {
     }
 
@@ -44,6 +45,7 @@ struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT AccountsModelItem::Private
 
     Tp::AccountPtr mAccount;
     Tp::ContactManagerPtr mManager;
+    Tpy::ConnectionCapabilities mAccountCaps;
 };
 
 void AccountsModelItem::Private::setStatus(const QString &value)
@@ -119,7 +121,7 @@ AccountsModelItem::AccountsModelItem(const Tp::AccountPtr &account)
             SLOT(onChanged()));
     connect(mPriv->mAccount.data(),
             SIGNAL(capabilitiesChanged(Tp::ConnectionCapabilities)),
-            SIGNAL(capabilitiesChanged(Tp::ConnectionCapabilities)));
+            SLOT(onCapabilitiesChanged()));
     connect(mPriv->mAccount.data(),
             SIGNAL(connectsAutomaticallyPropertyChanged(bool)),
             SLOT(onChanged()));
@@ -254,6 +256,30 @@ QVariant AccountsModelItem::data(int role) const
                 return Tp::ContactListStateNone;
             }
         }
+        case AccountsModel::TextChatCapabilityRole:
+            return mPriv->mAccount->capabilities().textChats();
+        case AccountsModel::StreamedMediaCallCapabilityRole:
+            return mPriv->mAccount->capabilities().streamedMediaCalls();
+        case AccountsModel::StreamedMediaAudioCallCapabilityRole:
+            return mPriv->mAccount->capabilities().streamedMediaAudioCalls();
+        case AccountsModel::StreamedMediaVideoCallCapabilityRole:
+            return mPriv->mAccount->capabilities().streamedMediaVideoCalls();
+        case AccountsModel::StreamedMediaVideoCallWithAudioCapabilityRole:
+            return mPriv->mAccount->capabilities().streamedMediaVideoCallsWithAudio();
+        case AccountsModel::StreamedMediaUpgradeCallCapabilityRole:
+            return mPriv->mAccount->capabilities().upgradingStreamedMediaCalls();
+        case AccountsModel::MediaCallCapabilityRole:
+            return mPriv->mAccountCaps.mediaCalls();
+        case AccountsModel::AudioCallCapabilityRole:
+            return mPriv->mAccountCaps.audioCalls();
+        case AccountsModel::VideoCallCapabilityRole:
+            return mPriv->mAccountCaps.videoCalls();
+        case AccountsModel::VideoCallWithAudioCapabilityRole:
+            return mPriv->mAccountCaps.videoCallsWithAudio();
+        case AccountsModel::UpgradeCallCapabilityRole:
+            return mPriv->mAccountCaps.upgradingCalls();
+        case AccountsModel::FileTransferCapabilityRole:
+            return mPriv->mAccountCaps.fileTransfers();
         default:
             return QVariant();
     }
@@ -468,6 +494,12 @@ void AccountsModelItem::addKnownContacts()
     if (newNodes.count() > 0) {
         emit childrenAdded(this, newNodes);
     }
+}
+
+void AccountsModelItem::onCapabilitiesChanged()
+{
+    mPriv->mAccountCaps = mPriv->mAccount->capabilities().allClassSpecs();
+    emit capabilitiesChanged(mPriv->mAccountCaps);
 }
 
 }

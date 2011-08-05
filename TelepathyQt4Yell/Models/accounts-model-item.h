@@ -25,9 +25,9 @@
 #error IN_TELEPATHY_QT4_YELL_MODELS_HEADER
 #endif
 
+#include <TelepathyQt4Yell/ConnectionCapabilities>
 #include <TelepathyQt4Yell/Models/TreeNode>
 
-#include <TelepathyQt4/ConnectionCapabilities>
 #include <TelepathyQt4/Constants>
 #include <TelepathyQt4/Contact>
 #include <TelepathyQt4/Types>
@@ -72,7 +72,7 @@ Q_SIGNALS:
     void normalizedNameChanged(const QString &normalizedName);
     void validityChanged(bool validity);
     void stateChanged(bool state);
-    void capabilitiesChanged(const Tp::ConnectionCapabilities &capabilities);
+    void capabilitiesChanged(const Tpy::ConnectionCapabilities &capabilities);
     void connectsAutomaticallyPropertyChanged(bool connectsAutomatically);
     void firstOnline();
     void parametersChanged(const QVariantMap &parameters);
@@ -90,6 +90,7 @@ private Q_SLOTS:
     void onChanged();
 
     void onStatusChanged(Tp::ConnectionStatus status);
+    void onCapabilitiesChanged();
 
     void onContactManagerStateChanged(Tp::ContactListState state);
     void onContactsChanged(const Tp::Contacts &added,

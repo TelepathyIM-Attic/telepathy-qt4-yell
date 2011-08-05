@@ -51,6 +51,18 @@ public:
         ItemRole = Qt::UserRole,
         AvatarRole,
         IdRole,
+        TextChatCapabilityRole,
+        StreamedMediaCallCapabilityRole,
+        StreamedMediaAudioCallCapabilityRole,
+        StreamedMediaVideoCallCapabilityRole,
+        StreamedMediaVideoCallWithAudioCapabilityRole,
+        StreamedMediaUpgradeCallCapabilityRole,
+        MediaCallCapabilityRole,
+        AudioCallCapabilityRole,
+        VideoCallCapabilityRole,
+        VideoCallWithAudioCapabilityRole,
+        UpgradeCallCapabilityRole,
+        FileTransferCapabilityRole,
 
         // account roles
         ValidRole,
@@ -84,18 +96,6 @@ public:
         PublishStateRole,
         BlockedRole,
         GroupsRole,
-        TextChatCapabilityRole,
-        StreamedMediaCallCapabilityRole,
-        StreamedMediaAudioCallCapabilityRole,
-        StreamedMediaVideoCallCapabilityRole,
-        StreamedMediaVideoCallWithAudioCapabilityRole,
-        StreamedMediaUpgradeCallCapabilityRole,
-        MediaCallCapabilityRole,
-        AudioCallCapabilityRole,
-        VideoCallCapabilityRole,
-        VideoCallWithAudioCapabilityRole,
-        UpgradeCallCapabilityRole,
-        FileTransferCapabilityRole,
 
         CustomRole // a placemark for custom roles in inherited models
     };
