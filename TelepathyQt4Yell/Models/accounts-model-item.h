@@ -56,10 +56,7 @@ public:
     Q_INVOKABLE void setRequestedPresence(int type, const QString &status, const QString &statusMessage);
     Q_INVOKABLE bool isPresenceSupported(int type) const;
 
-    void clearContacts();
-
 public Q_SLOTS:
-    void addKnownContacts();
     void onConnectionChanged(const Tp::ConnectionPtr &connection);
     void onConnectionInvalidated();
 
@@ -97,6 +94,9 @@ private Q_SLOTS:
                            const Tp::Contacts &removed);
 
 private:
+    void clearContacts();
+    void addKnownContacts();
+
     struct Private;
     friend struct Private;
     Private *mPriv;
