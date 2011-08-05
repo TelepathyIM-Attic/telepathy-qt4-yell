@@ -7,6 +7,7 @@ Enhancements:
  * Use Tp::AccountSet instead of Tp::AccountManager to monitor accounts in Tpy::AccountsModel
  * Add fileTransfers to Tpy::ContactCapabilities
  * Add Capabilities roles to AccountsModelItem
+ * Add ServiceNameRole to AccountsModel
 
 Fixes:
  * Report the connection status reason using the Connection object if possible

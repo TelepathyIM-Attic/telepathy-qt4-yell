@@ -205,6 +205,8 @@ QVariant AccountsModelItem::data(int role) const
             return mPriv->mAccount->cmName();
         case AccountsModel::ProtocolNameRole:
             return mPriv->mAccount->protocolName();
+        case AccountsModel::ServiceNameRole:
+            return mPriv->mAccount->serviceName();
         case AccountsModel::DisplayNameRole:
         case Qt::DisplayRole:
             return mPriv->mAccount->displayName();

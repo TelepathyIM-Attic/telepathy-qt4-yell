@@ -98,6 +98,7 @@ void AccountsModel::initialize()
     roles[EnabledRole] = "enabled";
     roles[ConnectionManagerNameRole] = "connectionManager";
     roles[ProtocolNameRole] = "protocol";
+    roles[ServiceNameRole] = "service";
     roles[DisplayNameRole] = "displayName";
     roles[IconRole] = "icon";
     roles[NicknameRole] = "nickname";

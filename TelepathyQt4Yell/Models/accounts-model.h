@@ -69,6 +69,7 @@ public:
         EnabledRole,
         ConnectionManagerNameRole,
         ProtocolNameRole,
+        ServiceNameRole,
         DisplayNameRole,
         IconRole,
         NicknameRole,
