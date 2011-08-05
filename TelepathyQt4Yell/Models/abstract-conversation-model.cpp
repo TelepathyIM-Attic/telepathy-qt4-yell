@@ -28,6 +28,7 @@
 
 #include <TelepathyQt4/AvatarData>
 #include <TelepathyQt4/PendingReady>
+#include <TelepathyQt4/Presence>
 #include <TelepathyQt4/ReceivedMessage>
 
 #include <QPixmap>
@@ -53,9 +54,13 @@ AbstractConversationModel::AbstractConversationModel(QObject *parent)
     QHash<int, QByteArray> roles;
     roles[EventTypeRole] = "eventType";
     roles[SenderRole] = "sender";
+    roles[SenderIdRole] = "senderId";
     roles[SenderAvatarRole] = "senderAvatar";
+    roles[SenderPresenceTypeRole] = "senderPresenceType";
     roles[ReceiverRole] = "receiver";
+    roles[ReceiverIdRole] = "receiverId";
     roles[ReceiverAvatarRole] = "receiverAvatar";
+    roles[ReceiverPresenceTypeRole] = "receiverPresenceType";
     roles[DateTimeRole] = "dateTime";
     roles[ItemRole] = "item";
     roles[MessageTextRole] = "messageText";
@@ -102,9 +107,19 @@ QVariant AbstractConversationModel::data(const QModelIndex &index, int role) con
             return item->sender()->alias();
         }
         return QVariant();
+    case SenderIdRole:
+        if (!item->sender().isNull()) {
+            return item->sender()->id();
+        }
+        return QVariant();
     case SenderAvatarRole:
         if (!item->sender().isNull()) {
             return item->sender()->avatarData().fileName;
+        }
+        return QVariant();
+    case SenderPresenceTypeRole:
+        if (!item->sender().isNull()) {
+            return item->sender()->presence().type();
         }
         return QVariant();
     case ReceiverRole:
@@ -112,9 +127,19 @@ QVariant AbstractConversationModel::data(const QModelIndex &index, int role) con
             return item->receiver()->alias();
         }
         return QVariant();
+    case ReceiverIdRole:
+        if (!item->receiver().isNull()) {
+            return item->receiver()->id();
+        }
+        return QVariant();
     case ReceiverAvatarRole:
         if (!item->receiver().isNull()) {
             return item->receiver()->avatarData().fileName;
+        }
+        return QVariant();
+    case ReceiverPresenceTypeRole:
+        if (!item->receiver().isNull()) {
+            return item->receiver()->presence().type();
         }
         return QVariant();
     case DateTimeRole:

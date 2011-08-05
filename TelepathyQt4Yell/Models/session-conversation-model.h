@@ -48,7 +48,7 @@ public:
     explicit SessionConversationModel(const Tp::ContactPtr &self, const Tp::TextChannelPtr &channel, QObject *parent = 0);
     virtual ~SessionConversationModel();
 
-    Q_INVOKABLE void sendMessage(const QString &text);
+    Q_INVOKABLE void sendMessage(const QString &text, Tp::ChannelTextMessageType type=Tp::ChannelTextMessageTypeNormal, Tp::MessageSendingFlags flags=0);
     Q_INVOKABLE void disconnectChannelQueue();
     Q_INVOKABLE void connectChannelQueue();
     Q_INVOKABLE bool channelQueueConnected() const;

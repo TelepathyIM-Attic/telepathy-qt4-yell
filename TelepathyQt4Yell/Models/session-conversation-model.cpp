@@ -70,7 +70,7 @@ SessionConversationModel::~SessionConversationModel()
     delete mPriv;
 }
 
-void SessionConversationModel::sendMessage(const QString &text)
+void SessionConversationModel::sendMessage(const QString &text, Tp::ChannelTextMessageType type, Tp::MessageSendingFlags flags)
 {
     Tp::ContactPtr receiver;
     if (!mPriv->mChannel.isNull() &&
@@ -81,10 +81,10 @@ void SessionConversationModel::sendMessage(const QString &text)
         receiver = mPriv->mChannel->connection()->contactManager()->lookupContactByHandle(handle);
     }
     TextEventItem *item = new TextEventItem(mPriv->mSelf, receiver,
-        QDateTime::currentDateTime(), text, Tp::ChannelTextMessageTypeNormal, this);
+        QDateTime::currentDateTime(), text, type, this);
     addItem(item);
 
-    mPriv->mChannel->send(item->messageText());
+    mPriv->mChannel->send(item->messageText(), type, flags);
 }
 
 Tp::ContactPtr SessionConversationModel::selfContact() const

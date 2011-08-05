@@ -46,9 +46,13 @@ public:
     enum Role {
         EventTypeRole = Qt::UserRole,
         SenderRole,
+        SenderIdRole,
         SenderAvatarRole,
+        SenderPresenceTypeRole,
         ReceiverRole,
+        ReceiverIdRole,
         ReceiverAvatarRole,
+        ReceiverPresenceTypeRole,
         DateTimeRole,
         ItemRole,
         MessageTextRole,

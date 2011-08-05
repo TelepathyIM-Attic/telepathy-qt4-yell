@@ -10,6 +10,7 @@ Enhancements:
  * Add ServiceNameRole to AccountsModel
  * Add method to remove contact in ContactModelItem
  * Add method to request or remove subscription in ContactModelItem
+ * Add id and presence type roles to AbstractConversationModel
 
 Fixes:
  * Report the connection status reason using the Connection object if possible
@@ -21,6 +22,7 @@ Fixes:
  * When setting status and statusMessage on Tpy::AccountsModelItem do not clear the presence type
  * Do not remove contact when rejecting publication
  * Do not request subscription automatically when accepting publication of a contact
+ * It should be possible to send messages with non-default type and flags
 
 telepathy-qt4-yell 0.1.6 (2011-06-06)
 ======================================
