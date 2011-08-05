@@ -24,6 +24,7 @@ Fixes:
  * Do not request subscription automatically when accepting publication of a contact
  * It should be possible to send messages with non-default type and flags
  * Make contact refresh methods private in AccountsModelItem
+ * Fixed a crash when items are removed from TreeNode
 
 telepathy-qt4-yell 0.1.6 (2011-06-06)
 ======================================
