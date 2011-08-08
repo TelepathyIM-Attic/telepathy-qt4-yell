@@ -156,14 +156,6 @@ void AccountsModel::onNewAccount(const Tp::AccountPtr &account)
     connect(item, SIGNAL(connectionStatusChanged(QString,int)),
             this, SIGNAL(accountConnectionStatusChanged(QString,int)));
     onItemsAdded(mPriv->mTree, QList<TreeNode *>() << item);
-
-    // this is done here because the item needs to be added to the tree so that the necessary signals
-    // are in place to detect when adding contacts to the account item
-    // otherwise, addKnownContacts will be called, but the contacts will not be added to the model
-    if (!account->connection().isNull()
-            && account->connection()->isValid()) {
-        item->onConnectionChanged(account->connection());
-    }
     emit newAccountItem(account->uniqueIdentifier());
 }
 

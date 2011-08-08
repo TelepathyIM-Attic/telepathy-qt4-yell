@@ -179,11 +179,17 @@ AccountsModelItem::AccountsModelItem(const Tp::AccountPtr &account)
     connect(mPriv->mAccount.data(),
             SIGNAL(connectionChanged(Tp::ConnectionPtr)),
             SLOT(onConnectionChanged(Tp::ConnectionPtr)));
+    QTimer::singleShot(0, this, SLOT(startup()));
 }
 
 AccountsModelItem::~AccountsModelItem()
 {
     delete mPriv;
+}
+
+void AccountsModelItem::startup()
+{
+    onConnectionChanged(mPriv->mAccount->connection());
 }
 
 QVariant AccountsModelItem::data(int role) const

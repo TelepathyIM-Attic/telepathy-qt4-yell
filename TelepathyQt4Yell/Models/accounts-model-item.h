@@ -82,8 +82,8 @@ Q_SIGNALS:
     void connectionStatusChanged(const QString &accountId, int status);
 
 private Q_SLOTS:
+    void startup();
     void onRemoved();
-
     void onChanged();
 
     void onStatusChanged(Tp::ConnectionStatus status);
