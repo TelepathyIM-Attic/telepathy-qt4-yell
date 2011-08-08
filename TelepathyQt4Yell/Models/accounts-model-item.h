@@ -56,10 +56,6 @@ public:
     Q_INVOKABLE void setRequestedPresence(int type, const QString &status, const QString &statusMessage);
     Q_INVOKABLE bool isPresenceSupported(int type) const;
 
-public Q_SLOTS:
-    void onConnectionChanged(const Tp::ConnectionPtr &connection);
-    void onConnectionInvalidated();
-
 Q_SIGNALS:
     void serviceNameChanged(const QString &serviceName);
     void profileChanged(const Tp::ProfilePtr &profile);
@@ -86,6 +82,8 @@ private Q_SLOTS:
     void onRemoved();
     void onChanged();
 
+    void onConnectionChanged(const Tp::ConnectionPtr &connection);
+    void onConnectionInvalidated();
     void onStatusChanged(Tp::ConnectionStatus status);
     void onCapabilitiesChanged();
 
