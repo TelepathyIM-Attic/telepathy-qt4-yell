@@ -333,4 +333,14 @@ QModelIndex AccountsModel::parent(const QModelIndex &index) const
     }
 }
 
+Tp::AccountPtr AccountsModel::accountForContactItem(ContactModelItem *contactItem) const
+{
+    AccountsModelItem *accountItem = qobject_cast<AccountsModelItem*>(contactItem->parent());
+    if (accountItem) {
+        return accountItem->account();
+    } else {
+        return Tp::AccountPtr();
+    }
+}
+
 }

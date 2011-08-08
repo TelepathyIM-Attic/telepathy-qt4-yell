@@ -26,6 +26,7 @@
 #endif
 
 #include <TelepathyQt4Yell/Models/AccountsModelItem>
+#include <TelepathyQt4Yell/Models/ContactModelItem>
 
 #include <TelepathyQt4/Account>
 #include <TelepathyQt4/AccountManager>
@@ -111,6 +112,7 @@ public:
     Tp::AccountPtr accountForIndex(const QModelIndex &index) const;
     Tp::AccountPtr accountForContactIndex(const QModelIndex &index) const;
     Tp::ContactPtr contactForIndex(const QModelIndex &index) const;
+    Tp::AccountPtr accountForContactItem(Tpy::ContactModelItem* contactItem) const;
 
     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
     virtual bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
