@@ -67,9 +67,6 @@ ContactModelItem::ContactModelItem(const Tp::ContactPtr &contact)
             SLOT(onChanged()));
     connect(contact.data(),
             SIGNAL(capabilitiesChanged(Tp::ContactCapabilities)),
-            SLOT(onChanged()));
-    connect(contact.data(),
-            SIGNAL(capabilitiesChanged(Tp::ContactCapabilities)),
             SLOT(onCapabilitiesChanged()));
     connect(contact.data(),
             SIGNAL(locationUpdated(Tp::LocationInfo)),
@@ -218,6 +215,7 @@ void ContactModelItem::remove(const QString &message)
     QList<Tp::ContactPtr> contacts;
     contacts << mPriv->mContact;
     mPriv->mContact->manager()->removeContacts(contacts, message);
+    onChanged();
 }
 
 }
