@@ -58,7 +58,7 @@ TreeNode *AccountsModel::Private::node(const QModelIndex &index) const
 /**
  * \class AccountsModel
  * \ingroup models
- * \headerfile TelepathyQt4Yell/accounst-model.h <TelepathyQt4Yell/AccountsModel>
+ * \headerfile TelepathyQt4Yell/accounts-model.h <TelepathyQt4Yell/AccountsModel>
  *
  * \brief The accounts model represents a tree of the valid accounts and their contacts
  *
