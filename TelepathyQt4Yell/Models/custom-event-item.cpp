@@ -37,6 +37,24 @@ struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT CustomEventItem::Private
     CustomEventItem::CustomEventType mCustomEventType;
 };
 
+/**
+ * \class CustomEventItem
+ * \ingroup models
+ * \headerfile TelepathyQt4Yell/custom-event-item.h <TelepathyQt4Yell/CustomEventItem>
+ *
+ * \brief A model item to hold non-message events in a conversation
+ *
+ */
+
+/**
+  * Construct a CustomEventItem object
+  * \param sender The contact originating the event
+  * \param receiver The intended recipient of the event
+  * \param time The time at which the event took place
+  * \param customEventText A description of the event
+  * \param customEventType The type of the event
+  * \param parent the parent object
+  */
 CustomEventItem::CustomEventItem(const Tp::ContactPtr &sender,
     const Tp::ContactPtr &receiver, const QDateTime &time,
     const QString &customEventText, CustomEventItem::CustomEventType customEventType,

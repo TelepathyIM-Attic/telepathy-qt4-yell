@@ -12,6 +12,7 @@ Enhancements:
  * Add method to request or remove subscription in ContactModelItem
  * Add id and presence type roles to AbstractConversationModel
  * Added AccountForContactItem method to AccountsModel
+ * Added API docs to model classes
 
 Fixes:
  * Report the connection status reason using the Connection object if possible

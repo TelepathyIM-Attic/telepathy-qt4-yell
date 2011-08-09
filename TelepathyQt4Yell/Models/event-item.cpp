@@ -43,6 +43,22 @@ struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT EventItem::Private
     QDateTime mDateTime;
 };
 
+/**
+ * \class EventItem
+ * \ingroup models
+ * \headerfile TelepathyQt4Yell/eventitem.h <TelepathyQt4Yell/EventItem>
+ *
+ * \brief A model for a text chat conversation
+ *
+ */
+
+/**
+  * Construct a EventItem object
+  * \param sender The originating contact of the event
+  * \param receiver The recipient of the event
+  * \param dateTime The time at which the event took place
+  * \param parent The parent object
+  */
 EventItem::EventItem(const Tp::ContactPtr &sender, const Tp::ContactPtr &receiver,
     const QDateTime &dateTime, QObject *parent)
     : QObject(parent),
