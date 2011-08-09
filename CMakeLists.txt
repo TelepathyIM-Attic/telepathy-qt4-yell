@@ -165,11 +165,11 @@ macro_log_feature(GSTREAMER_FOUND "GStreamer"
                   "http://www.gstreamer.net/" FALSE)
 
 # Find telepathy-glib
-set(TELEPATHY_GLIB_MIN_VERSION 0.13.0)
+set(TELEPATHY_GLIB_MIN_VERSION 0.15.1)
 find_package(TelepathyGlib)
 macro_log_feature(TELEPATHYGLIB_FOUND "Telepathy-glib"
                   "Glib bindings for Telepathy"
-                  "http://telepathy.freedesktop.org/" FALSE "0.13.0"
+                  "http://telepathy.freedesktop.org/" FALSE "0.15.1"
                   "Needed, together with Qt Glib integration, to build most of the unit tests")
 
 # Build TelepathyQt4-Farstream only if GStreamer, TelepathyFarstream and all of their dependencies were found

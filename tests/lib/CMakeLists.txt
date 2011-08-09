@@ -8,4 +8,5 @@ target_link_libraries(tp-qt4-yell-tests ${QT_QTCORE_LIBRARY} ${QT_QTDBUS_LIBRARY
 
 if(ENABLE_TP_GLIB_TESTS)
     add_subdirectory(glib)
+    add_subdirectory(glib-helpers)
 endif(ENABLE_TP_GLIB_TESTS)
