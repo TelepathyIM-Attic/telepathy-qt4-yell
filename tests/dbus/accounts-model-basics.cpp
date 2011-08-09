@@ -12,7 +12,9 @@
 #include <TelepathyQt4/ConnectionLowlevel>
 #include <TelepathyQt4/PendingReady>
 #include <TelepathyQt4/PendingAccount>
-#include <TelepathyQt4/Models/AccountsModel>
+
+#include <TelepathyQt4Yell/Models/AccountsModel>
+
 #include <telepathy-glib/debug.h>
 
 #include <tests/lib/test.h>
@@ -59,7 +61,7 @@ private:
     QString mConnName, mConnPath;
     ExampleEcho2Connection *mConnService;
     ConnectionPtr mConn;
-    Tp::AccountsModel *mAccountsModel;
+    Tpy::AccountsModel *mAccountsModel;
 
     bool mAccountCountChanged;
     int mRowsAboutToBeInsertedStart;
@@ -170,7 +172,7 @@ void TestAccountsModelBasics::testBasics()
     QCOMPARE(mLoop->exec(), 0);
     QCOMPARE(mAM->isReady(), true);
 
-    mAccountsModel = new Tp::AccountsModel(mAM, this);
+    mAccountsModel = new Tpy::AccountsModel(mAM, this);
 
     QCOMPARE(mAccountsModel->columnCount(), 1);
 
@@ -218,7 +220,7 @@ void TestAccountsModelBasics::testBasics()
 
     QVERIFY(mAccountsModel->index(0, 0).isValid());
 
-    QCOMPARE(mAccountsModel->index(0, 0).data(Tp::AccountsModel::IdRole).toString(),
+    QCOMPARE(mAccountsModel->index(0, 0).data(Tpy::AccountsModel::IdRole).toString(),
              acc->uniqueIdentifier());
 
     QVERIFY(connect(acc->becomeReady(),

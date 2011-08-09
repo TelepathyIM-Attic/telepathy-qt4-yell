@@ -18,7 +18,7 @@
 
 #include <telepathy-glib/debug.h>
 
-#include <tests/lib/glib/call/conn.h>
+#include <tests/lib/glib/callable/conn.h>
 #include <tests/lib/test.h>
 
 class TestCallChan : public Test
@@ -59,7 +59,7 @@ private Q_SLOTS:
     void cleanupTestCase();
 
 private:
-    ExampleCallConnection *mConnService;
+    ExampleCallableConnection *mConnService;
 
     Tp::ConnectionPtr mConn;
     QString mConnName;
@@ -280,8 +280,8 @@ void TestCallChan::initTestCase()
     gchar *connPath;
     GError *error = 0;
 
-    mConnService = EXAMPLE_CALL_CONNECTION(g_object_new(
-            EXAMPLE_TYPE_CALL_CONNECTION,
+    mConnService = EXAMPLE_CALLABLE_CONNECTION(g_object_new(
+            EXAMPLE_TYPE_CALLABLE_CONNECTION,
             "account", "me@example.com",
             "protocol", "example",
             "simulation-delay", 0,
