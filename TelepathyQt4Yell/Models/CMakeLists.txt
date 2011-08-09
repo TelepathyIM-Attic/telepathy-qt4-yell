@@ -73,6 +73,7 @@ add_dependencies(telepathy-qt4-yell-models telepathy-qt4-yell)
 target_link_libraries(telepathy-qt4-yell-models
     ${QT_QTDBUS_LIBRARY}
     ${QT_QTCORE_LIBRARY}
+    ${QT_QTGUI_LIBRARY}
     ${QT_QTDECLARATIVE_LIBRARY}
     ${TELEPATHY_QT4_LIBRARIES})
 
