@@ -188,7 +188,7 @@ void SessionConversationModel::connectChannelQueue()
   * Returns whether the channel message queue is currently connected to the model.
   * If connected, incoming messages will be automatically added to model
   */
-Q_INVOKABLE bool SessionConversationModel::channelQueueConnected() const
+bool SessionConversationModel::channelQueueConnected() const
 {
     return mPriv->mChannelQueueConnected;
 }
