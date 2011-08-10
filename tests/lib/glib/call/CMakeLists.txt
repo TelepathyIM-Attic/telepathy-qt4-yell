@@ -19,5 +19,5 @@ if(ENABLE_TP_GLIB_TESTS)
         protocol.h)
 
     add_library(example-cm-call STATIC ${example_cm_call_SRCS})
-    target_link_libraries(example-cm-call tp-glib-tests-future-extensions ${TPGLIB_LIBRARIES}
+    target_link_libraries(example-cm-call tp-glib-tests-future-extensions ${TPGLIB_LIBRARIES})
 endif(ENABLE_TP_GLIB_TESTS)
