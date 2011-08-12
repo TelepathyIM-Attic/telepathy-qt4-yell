@@ -49,6 +49,19 @@ struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT ContactModelItem::Private
     Tpy::ContactCapabilities mContactCaps;
 };
 
+/**
+ * \class ContactModelItem
+ * \ingroup models
+ * \headerfile TelepathyQt4Yell/contact-model-item.h <TelepathyQt4Yell/ContactModelItem>
+ *
+ * \brief This is a model item that represents a Telepathy Contact
+ *
+ */
+
+/**
+  * Construct a ContactModelItem object
+  * \param contact a Tp::ContactPtr object that references the Telepathy contact
+  */
 ContactModelItem::ContactModelItem(const Tp::ContactPtr &contact)
     : mPriv(new Private(contact))
 {
@@ -152,6 +165,13 @@ QVariant ContactModelItem::data(int role) const
     return QVariant();
 }
 
+/**
+  * Set data for a role of the object.
+  * Currently, the only supported roles are PublishStateRole and SubscriptionStateRole,
+  * which authorize or remove publication and subscription, depending on value.
+  * \param role The role that will be set the value
+  * \param value The value that will be set
+  */
 bool ContactModelItem::setData(int role, const QVariant &value)
 {
     switch (role) {
@@ -199,6 +219,9 @@ void ContactModelItem::onChanged()
     emit changed(this);
 }
 
+/**
+  * Returns the contact object of the item
+  */
 Tp::ContactPtr ContactModelItem::contact() const
 {
     return mPriv->mContact;
@@ -210,6 +233,10 @@ void ContactModelItem::onCapabilitiesChanged()
     emit capabilitiesChanged();
 }
 
+/**
+  * Remove a contact from the known contacts list
+  * \param message text to be sent when removing the contact
+  */
 void ContactModelItem::remove(const QString &message)
 {
     QList<Tp::ContactPtr> contacts;

@@ -55,6 +55,24 @@ TreeNode *AccountsModel::Private::node(const QModelIndex &index) const
     return node ? node : mTree;
 }
 
+/**
+ * \class AccountsModel
+ * \ingroup models
+ * \headerfile TelepathyQt4Yell/accounts-model.h <TelepathyQt4Yell/AccountsModel>
+ *
+ * \brief The accounts model represents a tree of the valid accounts and their contacts
+ *
+ * AccountsModel holds the valid Telepathy accounts and the valid contacts of those accounts.
+ * It will update automatically when accounts and contacts are added or removed, or when accounts go
+ * offline or online.
+ *
+ */
+
+/**
+  * Construct an AccountsModel object
+  * \param accountSet an AccountSet with the accounts that will be represented in the model
+  * \param parent parent object
+  */
 AccountsModel::AccountsModel(const Tp::AccountSetPtr &accountSet, QObject *parent)
     : QAbstractItemModel(parent),
       mPriv(new AccountsModel::Private(accountSet))
@@ -62,6 +80,11 @@ AccountsModel::AccountsModel(const Tp::AccountSetPtr &accountSet, QObject *paren
     initialize();
 }
 
+/**
+  * Construct an AccountsModel object. This is a convenience method.
+  * \param am an AccountManager. An AccountSet will be extracted by calling am->validAccounts().
+  * \param parent parent object
+  */
 AccountsModel::AccountsModel(const Tp::AccountManagerPtr &am, QObject *parent)
     : QAbstractItemModel(parent),
       mPriv(new AccountsModel::Private(am))
@@ -142,6 +165,10 @@ void AccountsModel::initialize()
     QTimer::singleShot(0, this, SLOT(onLoadAccounts()));
 }
 
+/**
+  * Get each account in the internally stored AccountSet object and
+  * call onNewAccount to add the accounts to the model
+  */
 void AccountsModel::onLoadAccounts()
 {
     // load existing accounts
@@ -150,6 +177,10 @@ void AccountsModel::onLoadAccounts()
     }
 }
 
+/**
+  * Add the account to the model
+  * \param account a AccountPtr object that will be represented in the model
+  */
 void AccountsModel::onNewAccount(const Tp::AccountPtr &account)
 {
     AccountsModelItem *item = new AccountsModelItem(account);
@@ -159,12 +190,22 @@ void AccountsModel::onNewAccount(const Tp::AccountPtr &account)
     emit newAccountItem(account->uniqueIdentifier());
 }
 
+/**
+  * emit a dataChanged signal for the tree node
+  * \param node TreeNode object that changed
+  */
 void AccountsModel::onItemChanged(TreeNode *node)
 {
     QModelIndex accountIndex = index(node);
     emit dataChanged(accountIndex, accountIndex);
 }
 
+/**
+  * When items are added to the tree, this method, calls beginInsertRows and endInsertRows
+  * to inform the changes. The account count is also refreshed.
+  * \param parent model item parent of the nodes
+  * \param nodes list of nodes added to the model
+  */
 void AccountsModel::onItemsAdded(Tpy::TreeNode *parent, const QList<Tpy::TreeNode *> &nodes)
 {
     QModelIndex parentIndex = index(parent);
@@ -178,6 +219,12 @@ void AccountsModel::onItemsAdded(Tpy::TreeNode *parent, const QList<Tpy::TreeNod
     emit accountCountChanged();
 }
 
+/**
+  * When items are removed from the tree, this method, calls beginRemoeRows and endRemoveRows
+  * to inform the changes. The account count is also refreshed.
+  * \param parent model item parent of the nodes
+  * \param nodes list of nodes removed from the model
+  */
 void AccountsModel::onItemsRemoved(TreeNode *parent, int first, int last)
 {
     QModelIndex parentIndex = index(parent);
@@ -190,11 +237,19 @@ void AccountsModel::onItemsRemoved(TreeNode *parent, int first, int last)
     emit accountCountChanged();
 }
 
+/**
+  * Quantity of accounts in the model
+  */
 int AccountsModel::accountCount() const
 {
     return mPriv->mTree->size();
 }
 
+/**
+  * Returns an account model item that matches a given account id.
+  * It will return a null object if there is no match.
+  * \param id an AccountPtr uniqueIdentifier that should match an account in the model.
+  */
 QObject *AccountsModel::accountItemForId(const QString &id) const
 {
     for (int i = 0; i < mPriv->mTree->size(); ++i) {
@@ -211,6 +266,12 @@ QObject *AccountsModel::accountItemForId(const QString &id) const
     return 0;
 }
 
+/**
+  * Returns a contact model item that matches a given account and contact id.
+  * It will return a null object if there is no match.
+  * \param accountId an AccountPtr uniqueIdentifier that should match an account in the model.
+  * \param contactId a ContactPtr id that should match a contact in the account
+  */
 QObject *AccountsModel::contactItemForId(const QString &accountId, const QString &contactId) const
 {
     AccountsModelItem *accountItem = qobject_cast<AccountsModelItem*>(accountItemForId(accountId));
@@ -232,16 +293,30 @@ QObject *AccountsModel::contactItemForId(const QString &accountId, const QString
     return 0;
 }
 
+/**
+  * This will always return 1
+  */
 int AccountsModel::columnCount(const QModelIndex &parent) const
 {
     return 1;
 }
 
+/**
+  * It returns the number of nodes for a given node.
+  * \param parent The parent node
+  */
 int AccountsModel::rowCount(const QModelIndex &parent) const
 {
     return mPriv->node(parent)->size();
 }
 
+/**
+  * Returns data for an index and role. To retrieve the data, the node of the index is found and
+  * the corresponding data method is called.
+  * If the index or role is invalid, an empty QVariant is returned
+  * \param index index of the node
+  * \param role a valid role for the node
+  */
 QVariant AccountsModel::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
@@ -251,6 +326,10 @@ QVariant AccountsModel::data(const QModelIndex &index, int role) const
     return mPriv->node(index)->data(role);
 }
 
+/**
+  * It returns an AccountPtr object for a given index
+  * \param index the account model item index
+  */
 Tp::AccountPtr AccountsModel::accountForIndex(const QModelIndex &index) const
 {
     TreeNode *accountNode = mPriv->node(index);
@@ -262,6 +341,10 @@ Tp::AccountPtr AccountsModel::accountForIndex(const QModelIndex &index) const
     }
 }
 
+/**
+  * It returns an AccountPtr object for a given contact index
+  * \param index the contact model item index
+  */
 Tp::AccountPtr AccountsModel::accountForContactIndex(const QModelIndex &index) const
 {
     TreeNode *contactNode = mPriv->node(index);
@@ -273,6 +356,10 @@ Tp::AccountPtr AccountsModel::accountForContactIndex(const QModelIndex &index) c
     }
 }
 
+/**
+  * It returns an ContactPtr object for a given index
+  * \param index the contact model item index
+  */
 Tp::ContactPtr AccountsModel::contactForIndex(const QModelIndex& index) const
 {
     TreeNode *contactNode = mPriv->node(index);
@@ -284,6 +371,10 @@ Tp::ContactPtr AccountsModel::contactForIndex(const QModelIndex& index) const
     }
 }
 
+/**
+  * It returns the item flags for a given index
+  * \param index the model item index
+  */
 Qt::ItemFlags AccountsModel::flags(const QModelIndex &index) const
 {
     if (index.isValid()) {
@@ -293,6 +384,12 @@ Qt::ItemFlags AccountsModel::flags(const QModelIndex &index) const
     return QAbstractItemModel::flags(index) | Qt::ItemIsEditable;
 }
 
+/**
+  * Set data on the model items
+  * \param index the model item index
+  * \param value the value to be set
+  * \param role the role that the data will be set in
+  */
 bool AccountsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (index.isValid()) {
@@ -308,6 +405,10 @@ QModelIndex AccountsModel::index(int row, int column, const QModelIndex &parent)
     return createIndex(row, column, parentNode->childAt(row));
 }
 
+/**
+  * It returns the index of the given node
+  * \param node the tree node
+  */
 QModelIndex AccountsModel::index(TreeNode *node) const
 {
     if (node->parent()) {
@@ -333,6 +434,10 @@ QModelIndex AccountsModel::parent(const QModelIndex &index) const
     }
 }
 
+/**
+  * It returns an AccountPtr object for a given contact model item
+  * \param contactItem The contact model item for which the account object will be returned
+  */
 Tp::AccountPtr AccountsModel::accountForContactItem(ContactModelItem *contactItem) const
 {
     AccountsModelItem *accountItem = qobject_cast<AccountsModelItem*>(contactItem->parent());

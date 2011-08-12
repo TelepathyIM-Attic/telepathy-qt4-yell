@@ -44,6 +44,26 @@ struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT CallEventItem::Private
     QString mDetailedEndReason;
 };
 
+/**
+ * \class CallEventItem
+ * \ingroup models
+ * \headerfile TelepathyQt4Yell/call-event-item.h <TelepathyQt4Yell/CallEventItem>
+ *
+ * \brief A model item that represents a call-related events
+ *
+ */
+
+/**
+  * Construct a CallEventItem object
+  * \param sender The originating contact of the event
+  * \param receiver The recipient of the event
+  * \param time The time at which the event took place
+  * \param duration Duration of the event
+  * \param endActor Contact that ended the event
+  * \param endReason Reason to end the event
+  * \param detailedEndReason Detailed description of the end reason
+  * \param parent The parent object
+  */
 CallEventItem::CallEventItem(const Tp::ContactPtr &sender,
     const Tp::ContactPtr &receiver, const QDateTime &time,
     const QTime &duration, Tp::ContactPtr &endActor,
@@ -79,6 +99,9 @@ QString CallEventItem::detailedEndReason() const
     return mPriv->mDetailedEndReason;
 }
 
+/**
+  * Returns whether the event is a missed call
+  */
 bool CallEventItem::missedCall() const
 {
     return (endActor().isNull() &&
@@ -86,6 +109,9 @@ bool CallEventItem::missedCall() const
             duration().elapsed() <= 0);
 }
 
+/**
+  * Returns whether the event is a rejected call
+  */
 bool CallEventItem::rejectedCall() const
 {
     return (!endActor().isNull() &&

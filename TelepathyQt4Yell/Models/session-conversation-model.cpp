@@ -53,6 +53,21 @@ struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT SessionConversationModel::Private
     int mNumPendingMessages;
 };
 
+/**
+ * \class SessionConversationModel
+ * \ingroup models
+ * \headerfile TelepathyQt4Yell/session-conversation-model.h <TelepathyQt4Yell/SessionConversationModel>
+ *
+ * \brief A model for a text chat conversation
+ *
+ */
+
+/**
+  * Construct a SessionConversationModel object
+  * \param self The contact on the local end of the conversation
+  * \param channel The text channel of the conversation
+  * \param parent the parent object
+  */
 SessionConversationModel::SessionConversationModel(const Tp::ContactPtr &self, const Tp::TextChannelPtr &channel, QObject *parent)
     : AbstractConversationModel(parent),
       mPriv(new Private(self,channel))
@@ -70,6 +85,10 @@ SessionConversationModel::~SessionConversationModel()
     delete mPriv;
 }
 
+/**
+  * Send a message using the text channel and add an EventItem object to the model
+  * For more info, see the Tp::TextChannel:sendMessage documentation
+  */
 void SessionConversationModel::sendMessage(const QString &text, Tp::ChannelTextMessageType type, Tp::MessageSendingFlags flags)
 {
     Tp::ContactPtr receiver;
@@ -87,6 +106,10 @@ void SessionConversationModel::sendMessage(const QString &text, Tp::ChannelTextM
     mPriv->mChannel->send(item->messageText(), type, flags);
 }
 
+/**
+  * Returns the contact of the local end of the conversation
+  * \param parent the parent object
+  */
 Tp::ContactPtr SessionConversationModel::selfContact() const
 {
     return mPriv->mSelf;
@@ -108,6 +131,12 @@ void SessionConversationModel::onMessageReceived(const Tp::ReceivedMessage &mess
     }
 }
 
+/**
+  * When the chat state of the channel changes, if it was changed by a contact on the remote end,
+  * a custom event item is added to the model with the data of the change
+  * \param contact The contact that requested the chat state change
+  * \param state The current chat state
+  */
 void SessionConversationModel::onChatStateChanged(const Tp::ContactPtr &contact, Tp::ChannelChatState state)
 {
     // ignore events originating from self
@@ -125,7 +154,9 @@ void SessionConversationModel::onChatStateChanged(const Tp::ContactPtr &contact,
 
 /**
   * Disconnect the model from the channel messages queue so that messages on the queue will not
-  * be acknowledged and entered into the model automatically
+  * be acknowledged and entered into the model automatically.
+  * This is useful when a conversation is paused, and the application may want to show messages still
+  * unread by the user, eg. the messages still in the queue
   */
 void SessionConversationModel::disconnectChannelQueue()
 {
@@ -153,11 +184,18 @@ void SessionConversationModel::connectChannelQueue()
     }
 }
 
-Q_INVOKABLE bool SessionConversationModel::channelQueueConnected() const
+/**
+  * Returns whether the channel message queue is currently connected to the model.
+  * If connected, incoming messages will be automatically added to model
+  */
+bool SessionConversationModel::channelQueueConnected() const
 {
     return mPriv->mChannelQueueConnected;
 }
 
+/**
+  * Number of messages in the channel message queue
+  */
 int SessionConversationModel::numPendingMessages() const
 {
     if (!mPriv->mChannelQueueConnected && !mPriv->mChannel.isNull()) {

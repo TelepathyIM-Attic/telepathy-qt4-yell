@@ -47,6 +47,19 @@ struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT AbstractConversationModel::Private
     QList<const EventItem *> mItems;
 };
 
+/**
+ * \class AbstractConversationModel
+ * \ingroup models
+ * \headerfile TelepathyQt4Yell/abstract-conversation-model.h <TelepathyQt4Yell/AbstractConversationModel>
+ *
+ * \brief An abstraction model for events in a channel
+ *
+ */
+
+/**
+  * Construct an AbstractConversationModel object
+  * \param parent the parent object
+  */
 AbstractConversationModel::AbstractConversationModel(QObject *parent)
     : QAbstractListModel(parent),
       mPriv(new Private())
@@ -230,11 +243,20 @@ QVariant AbstractConversationModel::data(const QModelIndex &index, int role) con
     }
 }
 
+/**
+  * Returns the quantity of EventItem objects in the model
+  * \param parent This is not used
+  */
 int AbstractConversationModel::rowCount(const QModelIndex &parent) const
 {
     return mPriv->mItems.count();
 }
 
+
+/**
+  * Add an item to the conversation model
+  * \param item EventItem to be added
+  */
 void AbstractConversationModel::addItem(const EventItem *item)
 {
     beginInsertRows(QModelIndex(), mPriv->mItems.count(), mPriv->mItems.count());
@@ -242,6 +264,10 @@ void AbstractConversationModel::addItem(const EventItem *item)
     endInsertRows();
 }
 
+/**
+  * Remove an item from the model
+  * \param item item to be removed. The item itself is not deleted
+  */
 bool AbstractConversationModel::deleteItem(const EventItem *item)
 {
     int num = mPriv->mItems.indexOf(item);
@@ -255,6 +281,11 @@ bool AbstractConversationModel::deleteItem(const EventItem *item)
     return false;
 }
 
+/**
+  * Returns an index to a given item.
+  * An empty index is returned if the item is not found
+  * \param item Item on the model
+  */
 QModelIndex AbstractConversationModel::index(const EventItem *item) const
 {
     int num = mPriv->mItems.indexOf(item);
@@ -265,6 +296,11 @@ QModelIndex AbstractConversationModel::index(const EventItem *item) const
     return QModelIndex();
 }
 
+/**
+  * Insert items in a certain position of the model
+  * \param items List of items to be inserted
+  * \param index Position where items will be inserted
+  */
 void AbstractConversationModel::insertItems(QList<const EventItem *> items, int index)
 {
     beginInsertRows(QModelIndex(), index, index + items.count() - 1);

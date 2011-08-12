@@ -62,6 +62,19 @@ void AccountsModelItem::Private::setStatusMessage(const QString &value)
     mAccount->setRequestedPresence(presence);
 }
 
+/**
+ * \class AccountsModelItem
+ * \ingroup models
+ * \headerfile TelepathyQt4Yell/accounts-model-item.h <TelepathyQt4Yell/AccountsModelItem>
+ *
+ * \brief This is a model item that represents a Telepathy Account
+ *
+ */
+
+/**
+  * Construct an AccountsModelItem object
+  * \param account a Tp::AccountPtr object that references the Telepathy account
+  */
 AccountsModelItem::AccountsModelItem(const Tp::AccountPtr &account)
     : mPriv(new Private(account))
 {
@@ -293,6 +306,13 @@ QVariant AccountsModelItem::data(int role) const
     }
 }
 
+/**
+  * Set data on a contact model item
+  * Currently, only the following roles are actually allowed; EnabledRole, RequestedPresenceRole,
+  * RequestedPresenceStatusMessageRole, NicknameRole.
+  * \param role the role to set the data in
+  * \param value the value that will be set
+  */
 bool AccountsModelItem::setData(int role, const QVariant &value)
 {
     switch (role) {
@@ -313,21 +333,34 @@ bool AccountsModelItem::setData(int role, const QVariant &value)
     }
 }
 
+/**
+  * It returns the Tp::AccountPtr object of the item
+  */
 Tp::AccountPtr AccountsModelItem::account() const
 {
      return mPriv->mAccount;
 }
 
+/**
+  * Enable/disable the account
+  * /param value true to enable the account, false to disable it
+  */
 void AccountsModelItem::setEnabled(bool value)
 {
     mPriv->mAccount->setEnabled(value);
 }
 
+/**
+  * Set the nickname of the account
+  */
 void AccountsModelItem::setNickname(const QString &value)
 {
     mPriv->mAccount->setNickname(value);
 }
 
+/**
+  * Set automatic presence of the account
+  */
 void AccountsModelItem::setAutomaticPresence(int type, const QString &status, const QString &statusMessage)
 {
     Tp::Presence presence;
@@ -335,6 +368,9 @@ void AccountsModelItem::setAutomaticPresence(int type, const QString &status, co
     mPriv->mAccount->setAutomaticPresence(presence);
 }
 
+/**
+  * Set requested presence of the account
+  */
 void AccountsModelItem::setRequestedPresence(int type, const QString &status, const QString &statusMessage)
 {
     Tp::Presence presence;
@@ -342,6 +378,9 @@ void AccountsModelItem::setRequestedPresence(int type, const QString &status, co
     mPriv->mAccount->setRequestedPresence(presence);
 }
 
+/**
+  * It returns whether a presence type is allowed for this account
+  */
 bool AccountsModelItem::isPresenceSupported(int type) const
 {
     Tp::PresenceSpecList list = mPriv->mAccount->allowedPresenceStatuses();
@@ -403,6 +442,10 @@ void AccountsModelItem::onStatusChanged(Tp::ConnectionStatus status)
     emit connectionStatusChanged(mPriv->mAccount->uniqueIdentifier(), status);
 }
 
+/**
+  * Called when an account's connection changes
+  * \param connection The new connection object of the account
+  */
 void AccountsModelItem::onConnectionChanged(const Tp::ConnectionPtr &connection)
 {
     // if the connection is invalid or disconnected, clear the contacts list
@@ -432,6 +475,9 @@ void AccountsModelItem::onConnectionChanged(const Tp::ConnectionPtr &connection)
     onContactManagerStateChanged(mPriv->mManager->state());
 }
 
+/**
+  * Called when the connection of the account is invalidated
+  */
 void AccountsModelItem::onConnectionInvalidated()
 {
     onStatusChanged(Tp::ConnectionStatusDisconnected);

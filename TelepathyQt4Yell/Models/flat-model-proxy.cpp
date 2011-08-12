@@ -40,6 +40,19 @@ int FlatModelProxy::Private::offsetOf(const FlatModelProxy *model, int index) co
     return offset;
 }
 
+/**
+ * \class FlatModelProxy
+ * \ingroup models
+ * \headerfile TelepathyQt4Yell/flat-model-proxy.h <TelepathyQt4Yell/FlatModelProxy>
+ *
+ * \brief A proxy that transforms an AccountsModel object into a flat model of ContactModelItem objects
+ *
+ */
+
+/**
+  * Construct a FlatModelProxy object
+  * \param source An AccountsModel object.
+  */
 FlatModelProxy::FlatModelProxy(QAbstractItemModel *source)
     : QAbstractProxyModel(source),
       mPriv(new Private())

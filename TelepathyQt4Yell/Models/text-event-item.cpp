@@ -37,6 +37,24 @@ struct TELEPATHY_QT4_YELL_MODELS_NO_EXPORT TextEventItem::Private
     Tp::ChannelTextMessageType mMessageType;
 };
 
+/**
+ * \class TextEventItem
+ * \ingroup models
+ * \headerfile TelepathyQt4Yell/text-event-item.h <TelepathyQt4Yell/TextEventItem>
+ *
+ * \brief A model item that represents a text message
+ *
+ */
+
+/**
+  * Construct a TextEventItem object
+  * \param sender The originating contact of the event
+  * \param receiver The recipient of the event
+  * \param time The time at which the event took place
+  * \param message The text message
+  * \param messageType The type of message
+  * \param parent The parent object
+  */
 TextEventItem::TextEventItem(const Tp::ContactPtr &sender,
     const Tp::ContactPtr &receiver, const QDateTime &time,
     const QString &message, Tp::ChannelTextMessageType messageType, QObject *parent)

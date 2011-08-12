@@ -42,6 +42,9 @@ class TELEPATHY_QT4_YELL_MODELS_EXPORT CustomEventItem : public EventItem
 public:
 
     enum CustomEventType {
+        /**
+          * The user has left the chat conversation
+          */
         CustomEventUserLeftChat = 0,
 
         // User defined values
