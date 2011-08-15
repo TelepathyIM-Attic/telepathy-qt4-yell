@@ -16,6 +16,10 @@ if(ENABLE_TP_GLIB_TESTS)
                                                                        #${GLIB2_LIBRARY}
                                                                        #example-cm-echo2
                                                                        #${PKG_GOBJECT2_LIBRARIES}
+    tpqt4_add_dbus_unit_test(AccountsModelAccounts accounts-model-accounts tp-glib-tests tp-qt4-yell-tests
+                                                                       tp-qt4-tests-glib-helpers
+                                                                       telepathy-qt4-yell-models)
+
 endif(ENABLE_TP_GLIB_TESTS)
 
 # Make check target. In case of check, output on failure and put it into a log
