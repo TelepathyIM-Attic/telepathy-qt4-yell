@@ -393,7 +393,7 @@ Qt::ItemFlags AccountsModel::flags(const QModelIndex &index) const
 bool AccountsModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (index.isValid()) {
-        mPriv->node(index)->setData(role, value);
+        return mPriv->node(index)->setData(role, value);
     }
 
     return false;
