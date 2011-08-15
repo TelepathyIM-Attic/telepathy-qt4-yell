@@ -13,9 +13,6 @@ if(ENABLE_TP_GLIB_TESTS)
     tpqt4_add_dbus_unit_test(AccountsModelBasics accounts-model-basics tp-glib-tests tp-qt4-yell-tests
                                                                        tp-qt4-tests-glib-helpers
                                                                        telepathy-qt4-yell-models)
-                                                                       #${GLIB2_LIBRARY}
-                                                                       #example-cm-echo2
-                                                                       #${PKG_GOBJECT2_LIBRARIES}
     tpqt4_add_dbus_unit_test(AccountsModelAccounts accounts-model-accounts tp-glib-tests tp-qt4-yell-tests
                                                                        tp-qt4-tests-glib-helpers
                                                                        telepathy-qt4-yell-models)

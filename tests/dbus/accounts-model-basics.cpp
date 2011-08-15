@@ -40,6 +40,7 @@ public:
     { }
 
 protected Q_SLOTS:
+    void onNewAccountItem(const QString &id);
     void onAccountCountChanged();
     void onRowsAboutToBeInserted(const QModelIndex &parent, int start, int end);
     void onRowsInserted(const QModelIndex &parent, int start, int end);
@@ -63,6 +64,7 @@ private:
     ConnectionPtr mConn;
     Tpy::AccountsModel *mAccountsModel;
 
+    QString mNewAccountId;
     bool mAccountCountChanged;
     int mRowsAboutToBeInsertedStart;
     int mRowsAboutToBeInsertedEnd;
@@ -73,6 +75,12 @@ private:
     int mRowsRemovedStart;
     int mRowsRemovedEnd;
 };
+
+void TestAccountsModelBasics::onNewAccountItem(const QString &id)
+{
+    qDebug() << "Got new account" << id;
+    mNewAccountId = id;
+}
 
 void TestAccountsModelBasics::onAccountCountChanged()
 {
@@ -172,9 +180,30 @@ void TestAccountsModelBasics::testBasics()
     QCOMPARE(mLoop->exec(), 0);
     QCOMPARE(mAM->isReady(), true);
 
+    qDebug() << "creating an account before creating the model";
+    // this is to make sure the model is loading existent accounts correctly
+    QVariantMap parameters;
+    parameters[QLatin1String("account")] = QLatin1String("existent");
+    PendingAccount *pacc = mAM->createAccount(QLatin1String("foo"),
+            QLatin1String("bar"), QLatin1String("foobar"), parameters);
+    QVERIFY(connect(pacc,
+                    SIGNAL(finished(Tp::PendingOperation *)),
+                    SLOT(expectSuccessfulCall(Tp::PendingOperation *))));
+    QCOMPARE(mLoop->exec(), 0);
+    QVERIFY(pacc->account());
+
     mAccountsModel = new Tpy::AccountsModel(mAM, this);
 
     QCOMPARE(mAccountsModel->columnCount(), 1);
+
+    QVERIFY(connect(mAccountsModel,
+                    SIGNAL(newAccountItem(const QString&)),
+                    SLOT(onNewAccountItem(const QString&))));
+
+   // check if the existent accounts are loaded before connecting to the other signals
+    while (mNewAccountId.isNull()) {
+        mLoop->processEvents();
+    }
 
     QVERIFY(connect(mAccountsModel,
                     SIGNAL(accountCountChanged()),
@@ -194,9 +223,9 @@ void TestAccountsModelBasics::testBasics()
                     SIGNAL(rowsRemoved(const QModelIndex&, int, int)),
                     SLOT(onRowsRemoved(const QModelIndex&, int, int))));
 
-    QVariantMap parameters;
+    parameters.clear();
     parameters[QLatin1String("account")] = QLatin1String("foobar");
-    PendingAccount *pacc = mAM->createAccount(QLatin1String("foo"),
+    pacc = mAM->createAccount(QLatin1String("foo"),
             QLatin1String("bar"), QLatin1String("foobar"), parameters);
     QVERIFY(connect(pacc,
                     SIGNAL(finished(Tp::PendingOperation *)),
@@ -205,13 +234,13 @@ void TestAccountsModelBasics::testBasics()
     QVERIFY(pacc->account());
 
     // check if the account count signal is being emitted correctly
-    while (!mAccountCountChanged && mAccountsModel->accountCount() != 1) {
+    while (!mAccountCountChanged && mAccountsModel->accountCount() <= 1) {
         mLoop->processEvents();
     }
  
     // Verify the account was added to the model
-    QCOMPARE(mAccountsModel->rowCount(), 1);
-    QCOMPARE(mAccountsModel->accountCount(), 1);
+    QCOMPARE(mAccountsModel->rowCount(), 2);
+    QCOMPARE(mAccountsModel->accountCount(), 2);
 
     AccountPtr acc = Account::create(mAM->dbusConnection(), mAM->busName(),
             QLatin1String("/org/freedesktop/Telepathy/Account/foo/bar/Account0"),
@@ -231,26 +260,25 @@ void TestAccountsModelBasics::testBasics()
         mLoop->processEvents();
     }
 
-    /*
-    qDebug() << "creating another account";
 
-    pacc = mAM->createAccount(QLatin1String("spurious"),
-            QLatin1String("normal"), QLatin1String("foobar"), parameters);
-    QVERIFY(connect(pacc,
-                    SIGNAL(finished(Tp::PendingOperation *)),
-                    SLOT(expectSuccessfulCall(Tp::PendingOperation *))));
-    QCOMPARE(mLoop->exec(), 0);
+    // check the accountItemForId method
+    QObject *accObject = mAccountsModel->accountItemForId(acc->uniqueIdentifier());
+    Tpy::AccountsModelItem *accItem = qobject_cast<Tpy::AccountsModelItem*>(accObject);
+    QVERIFY(accItem);
+    QCOMPARE(accItem->data(Tpy::AccountsModel::IdRole).toString(), acc->uniqueIdentifier());
 
-    // check for the rowsAboutToBeInserted and rowsInserted signals
-    while (!mRowsInsertedStart != 1) {
-        mLoop->processEvents();
-    }
+    // check the index(TreeNode*) method
+    QModelIndex idx = mAccountsModel->index(accItem);
+    QVERIFY(idx.isValid());
+    QCOMPARE(idx.data(Tpy::AccountsModel::IdRole).toString(), acc->uniqueIdentifier());
 
-    QCOMPARE(mRowsInsertedStart, mRowsInsertedEnd);
-    QCOMPARE(mRowsAboutToBeInsertedStart, mRowsInsertedStart);
-    QCOMPARE(mRowsAboutToBeInsertedEnd, mRowsInsertedEnd);
-    */
+    // check the accountForIndex method
+    Tp::AccountPtr accFromIndex = mAccountsModel->accountForIndex(mAccountsModel->index(0,0));
+    QCOMPARE(accFromIndex->uniqueIdentifier(), acc->uniqueIdentifier());
 
+    // check the setData method
+    QVERIFY(mAccountsModel->setData(mAccountsModel->index(0,0), false, Tpy::AccountsModel::EnabledRole));
+    
     qDebug() << "Going to remove account " << acc->uniqueIdentifier();
     // check for the rowsAboutToBeRemoved and rowsRemoved signals
     QVERIFY(connect(acc->remove(),
@@ -261,9 +289,9 @@ void TestAccountsModelBasics::testBasics()
         mLoop->processEvents();
     }
 
-    QCOMPARE(mRowsInsertedStart, mRowsInsertedEnd);
-    QCOMPARE(mRowsAboutToBeInsertedStart, mRowsInsertedStart);
-    QCOMPARE(mRowsAboutToBeInsertedEnd, mRowsInsertedEnd);
+    QCOMPARE(mRowsRemovedStart, mRowsRemovedEnd);
+    QCOMPARE(mRowsAboutToBeRemovedStart, mRowsRemovedStart);
+    QCOMPARE(mRowsAboutToBeRemovedEnd, mRowsRemovedEnd);
 }
 
 void TestAccountsModelBasics::cleanup()
