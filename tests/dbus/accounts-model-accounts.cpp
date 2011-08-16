@@ -127,6 +127,14 @@ void TestAccountsModelAccounts::onItemChanged()
     QCOMPARE(accountItem->data(Tpy::AccountsModel::StreamedMediaVideoCallCapabilityRole).toBool(), account->capabilities().streamedMediaVideoCalls());
     QCOMPARE(accountItem->data(Tpy::AccountsModel::StreamedMediaVideoCallWithAudioCapabilityRole).toBool(), account->capabilities().streamedMediaVideoCallsWithAudio());
     QCOMPARE(accountItem->data(Tpy::AccountsModel::StreamedMediaUpgradeCallCapabilityRole).toBool(), account->capabilities().upgradingStreamedMediaCalls());
+
+    Tpy::ConnectionCapabilities connCaps = account->capabilities();
+    QCOMPARE(accountItem->data(Tpy::AccountsModel::MediaCallCapabilityRole).toBool(), connCaps.mediaCalls());
+    QCOMPARE(accountItem->data(Tpy::AccountsModel::AudioCallCapabilityRole).toBool(), connCaps.audioCalls());
+    QCOMPARE(accountItem->data(Tpy::AccountsModel::VideoCallCapabilityRole).toBool(), connCaps.videoCalls());
+    QCOMPARE(accountItem->data(Tpy::AccountsModel::VideoCallWithAudioCapabilityRole).toBool(), connCaps.videoCallsWithAudio());
+    QCOMPARE(accountItem->data(Tpy::AccountsModel::UpgradeCallCapabilityRole).toBool(), connCaps.upgradingCalls());
+    QCOMPARE(accountItem->data(Tpy::AccountsModel::FileTransferCapabilityRole).toBool(), connCaps.fileTransfers());
 }
 
 void TestAccountsModelAccounts::initTestCase()
@@ -220,6 +228,9 @@ void TestAccountsModelAccounts::testBasics()
                     SLOT(onConnectionStatusChanged(QString,int))));
     QVERIFY(connect(accountItem, SIGNAL(nicknameChanged(QString)),
                     SLOT(onItemChanged())));
+
+    QCOMPARE(accountItem->isPresenceSupported(0), false);
+    QCOMPARE(accountItem->isPresenceSupported(2), true);
 
     // simulate that the account has a connection
     Client::DBus::PropertiesInterface *accPropertiesInterface =
