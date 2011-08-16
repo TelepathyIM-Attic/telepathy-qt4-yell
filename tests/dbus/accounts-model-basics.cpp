@@ -1,4 +1,5 @@
 
+#include <tests/lib/glib-helpers/test-conn-helper.h>
 #include <tests/lib/glib/echo2/conn.h>
 #include <QtCore/QEventLoop>
 #include <QtTest/QtTest>
@@ -60,8 +61,7 @@ private:
     Tp::AccountManagerPtr mAM;
 
     QString mConnName, mConnPath;
-    ExampleEcho2Connection *mConnService;
-    ConnectionPtr mConn;
+    TestConnHelper *mConn;
     Tpy::AccountsModel *mAccountsModel;
 
     QString mNewAccountId;
@@ -133,38 +133,12 @@ void TestAccountsModelBasics::initTestCase()
     tp_debug_set_flags("all");
     dbus_g_bus_get(DBUS_BUS_STARTER, 0);
 
-    gchar *name;
-    gchar *connPath;
-    GError *error = 0;
-
-    mConnService = EXAMPLE_ECHO_2_CONNECTION(g_object_new(
+    mConn = new TestConnHelper(this,
             EXAMPLE_TYPE_ECHO_2_CONNECTION,
             "account", "me@example.com",
-            "protocol", "foo",
-            NULL));
-    QVERIFY(mConnService != 0);
-    QVERIFY(tp_base_connection_register(TP_BASE_CONNECTION(mConnService),
-                "foo", &name, &connPath, &error));
-    QVERIFY(error == 0);
-
-    QVERIFY(name != 0);
-    QVERIFY(connPath != 0);
-
-    mConnName = QLatin1String(name);
-    mConnPath = QLatin1String(connPath);
-
-    mConn = Connection::create(mConnName, mConnPath,
-            ChannelFactory::create(QDBusConnection::sessionBus()),
-            ContactFactory::create());
-    QVERIFY(connect(mConn->lowlevel()->requestConnect(),
-                    SIGNAL(finished(Tp::PendingOperation*)),
-                    SLOT(expectSuccessfulCall(Tp::PendingOperation*))));
-    QCOMPARE(mLoop->exec(), 0);
-    QCOMPARE(mConn->isReady(), true);
-    QCOMPARE(mConn->status(), ConnectionStatusConnected);
-
-    g_free(name);
-    g_free(connPath);
+            "protocol", "echo2",
+            NULL);
+    QCOMPARE(mConn->connect(), true);
 }
 
 void TestAccountsModelBasics::init()
@@ -272,6 +246,9 @@ void TestAccountsModelBasics::testBasics()
     QVERIFY(idx.isValid());
     QCOMPARE(idx.data(Tpy::AccountsModel::IdRole).toString(), acc->uniqueIdentifier());
 
+    // check if the item is enabled
+    QVERIFY(mAccountsModel->flags(idx) & Qt::ItemIsEnabled);
+
     // check the accountForIndex method
     Tp::AccountPtr accFromIndex = mAccountsModel->accountForIndex(mAccountsModel->index(0,0));
     QCOMPARE(accFromIndex->uniqueIdentifier(), acc->uniqueIdentifier());
@@ -302,12 +279,10 @@ void TestAccountsModelBasics::cleanup()
 void TestAccountsModelBasics::cleanupTestCase()
 {
     if (mConn) {
-        // Disconnect and wait for invalidated
-        QVERIFY(connect(mConn->lowlevel()->requestDisconnect(),
-                        SIGNAL(finished(Tp::PendingOperation*)),
-                        SLOT(expectSuccessfulCall(Tp::PendingOperation*))));
-        QCOMPARE(mLoop->exec(), 0);
+        QCOMPARE(mConn->disconnect(), true);
+        delete mConn;
     }
+
     cleanupTestCaseImpl();
 }
 
