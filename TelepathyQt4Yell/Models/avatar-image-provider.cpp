@@ -62,9 +62,11 @@ QImage AvatarImageProvider::requestImage(const QString &id, QSize *size, const Q
     QString path = QString::fromLatin1(TELEPATHY_ACCOUNT_OBJECT_PATH_BASE "/") + id;
     Tp::AccountPtr account = mPriv->mAM->accountForPath(path);
     QImage image;
-    image.loadFromData(account->avatar().avatarData);
-    if (size) {
-        *size = image.size();
+    if (!account.isNull() && account->isValid()) {
+        image.loadFromData(account->avatar().avatarData);
+        if (size) {
+            *size = image.size();
+        }
     }
     return image;
 }
