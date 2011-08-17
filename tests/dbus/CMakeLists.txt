@@ -13,7 +13,7 @@ if(ENABLE_TP_GLIB_TESTS)
     tpqt4_add_dbus_unit_test(AccountsModelBasics accounts-model-basics tp-glib-tests tp-qt4-yell-tests
                                                                        tp-qt4-tests-glib-helpers
                                                                        telepathy-qt4-yell-models)
-    tpqt4_add_dbus_unit_test(AccountsModelAccounts accounts-model-accounts tp-glib-tests tp-qt4-yell-tests
+    tpqt4_add_dbus_unit_test(AccountsModelItem accounts-model-item-tests tp-glib-tests tp-qt4-yell-tests
                                                                        tp-qt4-tests-glib-helpers
                                                                        telepathy-qt4-yell-models)
 

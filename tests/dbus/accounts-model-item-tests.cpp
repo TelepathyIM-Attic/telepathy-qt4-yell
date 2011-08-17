@@ -25,12 +25,12 @@
 
 using namespace Tp;
 
-class TestAccountsModelAccounts : public Test
+class TestAccountsModelItem : public Test
 {
     Q_OBJECT
 
 public:
-    TestAccountsModelAccounts(QObject *parent = 0)
+    TestAccountsModelItem(QObject *parent = 0)
         : Test(parent),
           mAccountCountChanged(false),
           mAccountItemCreated(false),
@@ -65,19 +65,19 @@ private:
 
 };
 
-void TestAccountsModelAccounts::onAccountCountChanged()
+void TestAccountsModelItem::onAccountCountChanged()
 {
     qDebug() << "Account count changed!";
     mAccountCountChanged = true;
 }
 
-void TestAccountsModelAccounts::onNewAccountItem(const QString &accountId)
+void TestAccountsModelItem::onNewAccountItem(const QString &accountId)
 {
     qDebug() << "Account model item created!";
     mAccountItemCreated = true;
 }
 
-void TestAccountsModelAccounts::onConnectionStatusChanged(const QString &accountId, const int status)
+void TestAccountsModelItem::onConnectionStatusChanged(const QString &accountId, const int status)
 {
     qDebug() << "Account changed status: " << status;
     if(status == Tp::ConnectionStatusConnected) {
@@ -85,7 +85,7 @@ void TestAccountsModelAccounts::onConnectionStatusChanged(const QString &account
     }
 }
 
-void TestAccountsModelAccounts::onItemChanged()
+void TestAccountsModelItem::onItemChanged()
 {
     qDebug() << "Account item changed signal received";
     mAllSignalsExecuted = true;
@@ -135,7 +135,7 @@ void TestAccountsModelAccounts::onItemChanged()
     QCOMPARE(accountItem->data(Tpy::AccountsModel::FileTransferCapabilityRole).toBool(), connCaps.fileTransfers());
 }
 
-void TestAccountsModelAccounts::initTestCase()
+void TestAccountsModelItem::initTestCase()
 {
     initTestCaseImpl();
 
@@ -156,12 +156,12 @@ void TestAccountsModelAccounts::initTestCase()
     QCOMPARE(mConn->connect(), true);
 }
 
-void TestAccountsModelAccounts::init()
+void TestAccountsModelItem::init()
 {
     initImpl();
 }
 
-void TestAccountsModelAccounts::testBasics()
+void TestAccountsModelItem::testBasics()
 {
     QVERIFY(connect(mAM->becomeReady(),
                     SIGNAL(finished(Tp::PendingOperation *)),
@@ -278,12 +278,12 @@ void TestAccountsModelAccounts::testBasics()
     QCOMPARE(mAccountItemConnected, true);
 }
 
-void TestAccountsModelAccounts::cleanup()
+void TestAccountsModelItem::cleanup()
 {
     cleanupImpl();
 }
 
-void TestAccountsModelAccounts::cleanupTestCase()
+void TestAccountsModelItem::cleanupTestCase()
 {
     if (mConn) {
         QCOMPARE(mConn->disconnect(), true);
@@ -293,5 +293,5 @@ void TestAccountsModelAccounts::cleanupTestCase()
     cleanupTestCaseImpl();
 }
 
-QTEST_MAIN(TestAccountsModelAccounts)
-#include "_gen/accounts-model-accounts.cpp.moc.hpp"
+QTEST_MAIN(TestAccountsModelItem)
+#include "_gen/accounts-model-item.cpp.moc.hpp"
