@@ -308,4 +308,4 @@ void TestAccountsModelItem::cleanupTestCase()
 }
 
 QTEST_MAIN(TestAccountsModelItem)
-#include "_gen/accounts-model-item.cpp.moc.hpp"
+#include "_gen/accounts-model-item-tests.cpp.moc.hpp"
