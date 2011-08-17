@@ -19,6 +19,9 @@ if(ENABLE_TP_GLIB_TESTS)
     tpqt4_add_dbus_unit_test(AvatarImageProvider avatar-image-provider-tests tp-glib-tests tp-qt4-yell-tests
                                                                        tp-qt4-tests-glib-helpers
                                                                        telepathy-qt4-yell-models)
+    tpqt4_add_dbus_unit_test(AccountsModelContacts accounts-model-contacts tp-glib-tests tp-qt4-yell-tests
+                                                                       tp-qt4-tests-glib-helpers
+                                                                       telepathy-qt4-yell-models)
 
 endif(ENABLE_TP_GLIB_TESTS)
 
