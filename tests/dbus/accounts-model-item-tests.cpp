@@ -190,6 +190,8 @@ void TestAccountsModelItem::testBasics()
     QCOMPARE(mLoop->exec(), 0);
     QVERIFY(pacc->account());
 
+    qDebug() << "creating account";
+
     // check if the account count signal is being emitted correctly
     while (!mAccountCountChanged && mAccountsModel->accountCount() != 1) {
         mLoop->processEvents();
@@ -217,24 +219,33 @@ void TestAccountsModelItem::testBasics()
         mLoop->processEvents();
     }
 
+    qDebug() << "retrieving items";
     // set values
+    while (mAccountsModel->accountCount() == 0) {
+        mLoop->processEvents();
+    }
 
     Tp::AccountPtr accountPtr = mAccountsModel->accountForIndex(mAccountsModel->index(0, 0));
     Tpy::AccountsModelItem* accountItem = qobject_cast<Tpy::AccountsModelItem *>(mAccountsModel->accountItemForId(accountPtr->uniqueIdentifier()));
 
-    QCOMPARE(accountItem->data(Tpy::AccountsModel::ConnectionStatusRole).toUInt(), static_cast<uint>(accountPtr->connection()->status()));
-    QCOMPARE(accountItem->data(Tpy::AccountsModel::ConnectionStatusReasonRole).toUInt(), static_cast<uint>(accountPtr->connection()->statusReason()));
-    QCOMPARE(accountItem->data(Tpy::AccountsModel::ContactListStateRole).toUInt(), static_cast<uint>(accountPtr->connection()->contactManager()->state()));
+    qDebug() << "retrieving empty values";
+    QCOMPARE(accountItem->data(Tpy::AccountsModel::ConnectionStatusRole).toUInt(), static_cast<uint>(Tp::ConnectionStatusDisconnected));
+    qDebug() << "retrieving connection status reason";
+    QCOMPARE(accountItem->data(Tpy::AccountsModel::ConnectionStatusReasonRole).toUInt(), static_cast<uint>(accountPtr->connectionStatusReason()));
+    QCOMPARE(accountItem->data(Tpy::AccountsModel::ContactListStateRole).toUInt(), static_cast<uint>(Tp::ContactListStateNone));
+    qDebug() << "checking supported presence";
+    QCOMPARE(accountItem->isPresenceSupported(0), false);
+    QCOMPARE(accountItem->isPresenceSupported(2), true);
 
+    qDebug() << "connecting signals";
 
     QVERIFY(connect(accountItem, SIGNAL(connectionStatusChanged(QString,int)),
                     SLOT(onConnectionStatusChanged(QString,int))));
     QVERIFY(connect(accountItem, SIGNAL(nicknameChanged(QString)),
                     SLOT(onItemChanged())));
 
-    QCOMPARE(accountItem->isPresenceSupported(0), false);
-    QCOMPARE(accountItem->isPresenceSupported(2), true);
 
+    qDebug() << "connecting account";
     // simulate that the account has a connection
     Client::DBus::PropertiesInterface *accPropertiesInterface =
         acc->interface<Client::DBus::PropertiesInterface>();
@@ -259,6 +270,7 @@ void TestAccountsModelItem::testBasics()
         mLoop->processEvents();
     }
 
+    qDebug() << "account connected";
     accountItem->setRequestedPresence(Tp::ConnectionStatusConnected, QLatin1String("available"), QLatin1String("available"));
 
     accountItem->setData(Tpy::AccountsModel::EnabledRole, true);
@@ -269,6 +281,8 @@ void TestAccountsModelItem::testBasics()
     QVERIFY(connect(acc->remove(),
                     SIGNAL(finished(Tp::PendingOperation *)),
                     SLOT(expectSuccessfulCall(Tp::PendingOperation *))));
+
+    qDebug() << "account removed";
 
     while (!mAllSignalsExecuted) {
         mLoop->processEvents();
@@ -286,7 +300,7 @@ void TestAccountsModelItem::cleanup()
 void TestAccountsModelItem::cleanupTestCase()
 {
     if (mConn) {
-        QCOMPARE(mConn->disconnect(), true);
+        mConn->disconnect();
         delete mConn;
     }
 
