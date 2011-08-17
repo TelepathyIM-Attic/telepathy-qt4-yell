@@ -9,7 +9,7 @@ if(ENABLE_TP_GLIB_TESTS)
 
     add_definitions(-DQT_NO_KEYWORDS)
 
-    tpqt4_add_dbus_unit_test(CallChannel call-chan tp-glib-tests tp-qt4-yell-tests tp-qt4-tests-glib-helpers)
+    #tpqt4_add_dbus_unit_test(CallChannel call-chan tp-glib-tests tp-qt4-yell-tests tp-qt4-tests-glib-helpers)
     tpqt4_add_dbus_unit_test(AccountsModelBasics accounts-model-basics tp-glib-tests tp-qt4-yell-tests
                                                                        tp-qt4-tests-glib-helpers
                                                                        telepathy-qt4-yell-models)
