@@ -116,11 +116,9 @@ void TestAccountsModelAccounts::onItemChanged()
     QCOMPARE(accountItem->data(Tpy::AccountsModel::CurrentPresenceRole).toString(), account->currentPresence().status());
     QCOMPARE(accountItem->data(Tpy::AccountsModel::CurrentPresenceTypeRole).toUInt(), static_cast<uint>(account->currentPresence().type()));
     QCOMPARE(accountItem->data(Tpy::AccountsModel::CurrentPresenceStatusMessageRole).toString(), account->currentPresence().statusMessage());
-    if (!account->connection().isNull()) {
-        QCOMPARE(accountItem->data(Tpy::AccountsModel::ConnectionStatusRole).toUInt(), static_cast<uint>(account->connection()->status()));
-        QCOMPARE(accountItem->data(Tpy::AccountsModel::ConnectionStatusReasonRole).toUInt(), static_cast<uint>(account->connection()->statusReason()));
-        QCOMPARE(accountItem->data(Tpy::AccountsModel::ContactListStateRole).toUInt(), static_cast<uint>(account->connection()->contactManager()->state()));
-    }
+    QCOMPARE(accountItem->data(Tpy::AccountsModel::ConnectionStatusRole).toUInt(), static_cast<uint>(account->connection()->status()));
+    QCOMPARE(accountItem->data(Tpy::AccountsModel::ConnectionStatusReasonRole).toUInt(), static_cast<uint>(account->connection()->statusReason()));
+    QCOMPARE(accountItem->data(Tpy::AccountsModel::ContactListStateRole).toUInt(), static_cast<uint>(account->connection()->contactManager()->state()));
     QCOMPARE(accountItem->data(Tpy::AccountsModel::TextChatCapabilityRole).toBool(), account->capabilities().textChats());
     QCOMPARE(accountItem->data(Tpy::AccountsModel::StreamedMediaCallCapabilityRole).toBool(), account->capabilities().streamedMediaCalls());
     QCOMPARE(accountItem->data(Tpy::AccountsModel::StreamedMediaAudioCallCapabilityRole).toBool(), account->capabilities().streamedMediaAudioCalls());
@@ -223,6 +221,11 @@ void TestAccountsModelAccounts::testBasics()
 
     Tp::AccountPtr accountPtr = mAccountsModel->accountForIndex(mAccountsModel->index(0, 0));
     Tpy::AccountsModelItem* accountItem = qobject_cast<Tpy::AccountsModelItem *>(mAccountsModel->accountItemForId(accountPtr->uniqueIdentifier()));
+
+    QCOMPARE(accountItem->data(Tpy::AccountsModel::ConnectionStatusRole).toUInt(), static_cast<uint>(accountPtr->connection()->status()));
+    QCOMPARE(accountItem->data(Tpy::AccountsModel::ConnectionStatusReasonRole).toUInt(), static_cast<uint>(accountPtr->connection()->statusReason()));
+    QCOMPARE(accountItem->data(Tpy::AccountsModel::ContactListStateRole).toUInt(), static_cast<uint>(accountPtr->connection()->contactManager()->state()));
+
 
     QVERIFY(connect(accountItem, SIGNAL(connectionStatusChanged(QString,int)),
                     SLOT(onConnectionStatusChanged(QString,int))));
