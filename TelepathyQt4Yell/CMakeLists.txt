@@ -14,6 +14,7 @@ set(telepathy_qt4_yell_SRCS
     channel.cpp
     channel-class-spec.cpp
     channel-factory.cpp
+    connection-capabilities.cpp
     contact-capabilities.cpp
     requestable-channel-class-spec.cpp
     types.cpp)
@@ -27,6 +28,7 @@ set(telepathy_qt4_yell_HEADERS
     ChannelClassSpec
     ChannelFactory
     ChannelInterfaceCredentialsStorageInterface
+    ConnectionCapabilities
     Constants
     ContactCapabilities
     Global
@@ -37,6 +39,7 @@ set(telepathy_qt4_yell_HEADERS
     channel.h
     channel-class-spec.h
     channel-factory.h
+    connection-capabilities.h
     constants.h
     contact-capabilities.h
     global.h
