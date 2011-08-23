@@ -3,9 +3,10 @@ telepathy-qt4-yell 0.1.x
 
 Enhancements:
  * All model classes, with the exception of the conversation-related classes, have been removed from the repository
+ * Added id and presence roles to conversation model
 
 Fixes:
- * 
+ *
 
 telepathy-qt4-yell 0.1.6 (2011-06-06)
 ======================================
